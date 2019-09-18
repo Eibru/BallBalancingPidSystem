@@ -13,7 +13,7 @@ public class SB_servoPos {
 
     /**
      * Sets the servos angles
-     * @param servoPos the servo positions
+     * @param servoPos the servo angles
      */
     public void setServoPositions(ServoPos servoPos){
         this.servoPos = servoPos;
