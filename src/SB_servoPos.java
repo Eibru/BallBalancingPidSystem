@@ -1,8 +1,8 @@
 public class SB_servoPos {
     private ServoPos servoPos;
 
-    public SB_servoPos(ServoPos servoPos){
-        this.servoPos = servoPos;
+    public SB_servoPos(){
+        this.servoPos = new ServoPos(0,0,0);
     }
 
     public void setServoPositions(ServoPos servoPos){

@@ -1,5 +1,14 @@
 public class main {
     public static void main(String args[]){
-//REEE
+        SB_servoPos servoStorageBox = new SB_servoPos();
+        SB_ballPos ballStorageBox = new SB_ballPos();
+
+        CamCom camCom = new CamCom(ballStorageBox);
+        PidController pidController = new PidController(ballStorageBox, servoStorageBox);
+        ServoCom servoCom = new ServoCom(servoStorageBox);
+
+        camCom.run();
+        pidController.run();
+        servoCom.run();
     }
 }

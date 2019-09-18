@@ -1,3 +1,7 @@
+/**
+ * @author Eilev Brustugun
+ * Class that acts like a simple storagebox for storing the position of the ball
+ */
 public class SB_ballPos {
     BallPos ballPos;
     public SB_ballPos(){
