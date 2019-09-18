@@ -40,4 +40,11 @@ public class BallPos {
         this.xPos = x;
         this.yPos = y;
     }
+
+    /**
+     * @return a string that represents the object
+     */
+    public String toString(){
+        return "x: " + this.xPos + "\ny: " + this.yPos;
+    }
 }

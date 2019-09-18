@@ -1,6 +1,5 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.Socket;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 
 /**
  * Gets the ballposition from the python CV program and puts it in a storagebox
@@ -22,11 +21,24 @@ public class CamCom extends Thread {
      */
     public void run(){
         try {
-            Socket socket = new Socket("localhost",5555);
-            BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            DatagramSocket socket = new DatagramSocket(5555);
+            byte[] buf = new byte[256];
 
             while(true){
-                System.out.println(inputStream.readLine());
+                //Get message from udp server
+                DatagramPacket packet = new DatagramPacket(buf, buf.length);
+                socket.receive(packet);
+                packet = new DatagramPacket(buf, buf.length, packet.getAddress(), packet.getPort());
+                String data = new String(packet.getData(), 0, packet.getLength());
+
+                //Extract the data
+                String[] pos = data.split("\n")[0].split(",");
+                BallPos ballPos = new BallPos(Double.parseDouble(pos[0]), Double.parseDouble(pos[1]));
+
+                //Put data into storagebox
+                this.storageBox.set(ballPos);
+
+                System.out.println(ballPos.toString());
             }
         }
         catch(Exception ex) {
