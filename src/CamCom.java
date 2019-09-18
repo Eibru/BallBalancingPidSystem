@@ -4,6 +4,10 @@
 public class CamCom extends Thread {
     private SB_ballPos storageBox;
 
+    /**
+     *
+     * @param storageBox
+     */
     public CamCom(SB_ballPos storageBox){
         this.storageBox = storageBox;
     }

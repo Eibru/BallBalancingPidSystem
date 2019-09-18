@@ -1,3 +1,7 @@
+/**
+ * Main class of the application
+ * Creates and starts the threads
+ */
 public class main {
     public static void main(String args[]){
         SB_servoPos servoStorageBox = new SB_servoPos();
