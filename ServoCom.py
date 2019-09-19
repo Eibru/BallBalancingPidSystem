@@ -20,4 +20,4 @@ while True:
     print(servo2)
     print(servo3)
     
-    #TODO write to servo
+    #TODO write to servos
