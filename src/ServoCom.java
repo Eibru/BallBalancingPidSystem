@@ -1,3 +1,8 @@
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+
 /**
  * Reads servo position and sends it to the python servo controller over TCP
  */
@@ -13,7 +18,21 @@ public class ServoCom extends Thread {
         this.storageBox = storageBox;
     }
 
+    /**
+     * Sends the servo positions to the python udp server
+     */
     public void run(){
+        try {
+            DatagramSocket socket = new DatagramSocket();
+            InetAddress address = InetAddress.getByName("localhost");
 
+            while (true) {
+                byte[] buf = (this.storageBox.getServoPos().toString() + "\n").getBytes();
+                DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 5556);
+                socket.send(packet);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

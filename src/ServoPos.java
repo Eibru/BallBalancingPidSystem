@@ -65,4 +65,11 @@ public class ServoPos {
     public double getAngle3(){
         return this.angle3;
     }
+
+    /**
+     * @return a string representation of the angles
+     */
+    public String toString(){
+        return this.angle1 + "," + this.angle2 + "," + this.angle3;
+    }
 }

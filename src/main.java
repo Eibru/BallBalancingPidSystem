@@ -11,8 +11,11 @@ public class main {
         PidController pidController = new PidController(ballStorageBox, servoStorageBox);
         ServoCom servoCom = new ServoCom(servoStorageBox);
 
-        camCom.run();
-        pidController.run();
-        servoCom.run();
+        ServoPos sp = new ServoPos(90.0,51.9,22.7);
+        servoStorageBox.setServoPositions(sp);
+
+        camCom.start();
+        pidController.start();
+        servoCom.start();
     }
 }
