@@ -5,6 +5,8 @@ public class PidController extends Thread{
     SB_ballPos storageBoxBall;
     SB_servoPos storageBoxServo;
 
+
+
     /**
      * Constructor
      * @param storageBoxBall Storagebox for ball position
@@ -16,7 +18,11 @@ public class PidController extends Thread{
     }
 
     public void run(){
-        System.out.println("penis");
+      int Kp = 1;
+      int Ki = 0;
+      int Kd = 0;
+
+
 
     }
 }
