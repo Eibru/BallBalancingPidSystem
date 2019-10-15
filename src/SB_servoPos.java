@@ -15,7 +15,7 @@ public class SB_servoPos {
      * Sets the servos angles
      * @param servoPos the servo angles
      */
-    public void setServoPositions(ServoPos servoPos){
+    public void set(ServoPos servoPos){
         this.servoPos = servoPos;
     }
 
@@ -25,7 +25,7 @@ public class SB_servoPos {
      * @param a2 servo2 angle
      * @param a3 servo3 angle
      */
-    public void setServoPositions(double a1, double a2, double a3){
+    public void set(double a1, double a2, double a3){
         this.servoPos.setAngle1(a1);
         this.servoPos.setAngle2(a2);
         this.servoPos.setAngle3(a3);
@@ -35,7 +35,7 @@ public class SB_servoPos {
      * Gets the servo angles
      * @return
      */
-    public ServoPos getServoPos(){
+    public ServoPos get(){
         return this.servoPos;
     }
 }

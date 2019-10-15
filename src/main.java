@@ -11,8 +11,9 @@ public class main {
         PidController pidController = new PidController(ballStorageBox, servoStorageBox);
         ServoCom servoCom = new ServoCom(servoStorageBox);
 
+        //Used for testing
         ServoPos sp = new ServoPos(90.0,51.9,22.7);
-        servoStorageBox.setServoPositions(sp);
+        servoStorageBox.set(sp);
 
         camCom.start();
         pidController.start();

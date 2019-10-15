@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -27,11 +26,11 @@ public class ServoCom extends Thread {
             InetAddress address = InetAddress.getByName("localhost");
 
             while (true) {
-                byte[] buf = (this.storageBox.getServoPos().toString() + "\n").getBytes();
+                byte[] buf = (this.storageBox.get().toString() + "\n").getBytes();
                 DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 5556);
                 socket.send(packet);
             }
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
