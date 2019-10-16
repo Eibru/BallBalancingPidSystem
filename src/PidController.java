@@ -1,66 +1,89 @@
 /**
  * Reads the data from the ballPos storagebox and generates the new servo angles and puts the values into the servoPos storagebox
  */
-import java.lang.Math;
-public class PidController extends Thread{
+
+public class PidController extends Thread {
     SB_ballPos storageBoxBall;
-    SB_servoPos storageBoxServo;
+
+    // PID gains:
+    private double Kp = 4;
+    private double Ki = 0;
+    private double Kd = 0;
+
+    // Setpoint
+    private double setpointX = 0;
+    private double setpointY = 0;
+
+    // Outputs
+    private double outputX;
+    private double outputy;
+
+    // PID contributions
+    private double integral = 0;
+    private double derivative = 0;
+    private double prevError = 0;
+    private double DT = 0.010; //sek
+
 
     /**
      * Constructor
-     * @param storageBoxBall Storagebox for ball position
-     * @param storageBoxServo Storagebox for servo angles
+     *
+     * @param storageBoxBall  Storagebox for ball position
      */
-    public PidController(SB_ballPos storageBoxBall, SB_servoPos storageBoxServo){
+    public PidController(SB_ballPos storageBoxBall) {
         this.storageBoxBall = storageBoxBall;
-        this.storageBoxServo = storageBoxServo;
-    }
-
-    public void run(){
-        double l = 14.5;
-        double pitch = 1;
-        double roll = 1;
-        double z0 = 0;
-        double d = 0;
-
-
-        double z1 = ((Math.sqrt(3*l)/6)+d)*Math.sin(pitch)*Math.cos(roll)+(l/2)*Math.sin(roll) + z0;
-        double z2 = ((Math.sqrt(3*l)/6)+d)*Math.sin(pitch)*Math.cos(roll)-(l/2)*Math.sin(roll) + z0;
-        double z3 = ((-Math.sqrt(3*l)/3)+d)*Math.sin(pitch)*Math.cos(roll) + z0;
-
 
     }
 
-    double[][] multiplyMatrices(double[][] firstMatrix, double[][] secondMatrix) {
-        double[][] result = new double[firstMatrix.length][secondMatrix[0].length];
+    public void run() {
 
-        for (int row = 0; row < result.length; row++) {
-            for (int col = 0; col < result[row].length; col++) {
-                result[row][col] = multiplyMatricesCell(firstMatrix, secondMatrix, row, col);
-            }
+        double ballPosX = storageBoxBall.getX();
+        double ballPosY = storageBoxBall.getY();
+
+        outputX = PIDcontroller(setpointX, ballPosX);
+        outputy = PIDcontroller(setpointY, ballPosY);
+
+    }
+
+    /**
+     * PID controller for platform in y og x movement
+     *
+     * @param input The current ball position in y or x direction
+     * @param setpoint Desired ball position in y or x direction
+     * @return The angle which the platform needs to move in given direction
+     */
+    double PIDcontroller(double setpoint, double input){
+            double error = setpoint - input;
+
+        if(error <-2 || error > 2){
+            integral = integral + error*DT;
+        }else{
+            integral = 0;
         }
 
-        return result;
+        derivative = (error - prevError)/DT;
+
+        double output = (Kp*error) + (Ki*integral) + (Kd*derivative);
+
+        prevError = error;
+
+        return output;
     }
 
-    double multiplyMatricesCell(double[][] firstMatrix, double[][] secondMatrix, int row, int col) {
-        double cell = 0;
-        for (int i = 0; i < secondMatrix.length; i++) {
-            cell += firstMatrix[row][i] * secondMatrix[i][col];
-        }
-        return cell;
+    /**
+     * Gets the x output of the ball position
+     * @return the x output of the ball position
+     */
+    public double getOutputX(){
+        return this.outputX;
     }
 
-    String matrixToString(double[][] matrix){
-        String s = "[";
-        for(int i = 0; i < matrix.length; i++){
-            s += "[";
-            for(int j =0; j < matrix[i].length; j++){
-                s += matrix[i][j] + ", ";
-            }
-            s+="]\n";
-        }
-        s += "]";
-        return s;
+    /**
+     * Gets the y output of the ball position
+     * @return the y output of the ball position
+     */
+    public double getOutputY(){
+        return this.outputy;
     }
+
 }
