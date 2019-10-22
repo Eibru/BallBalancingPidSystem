@@ -3,7 +3,10 @@
  */
 
 public class PidController extends Thread {
-    SB_ballPos storageBoxBall;
+
+    //Storage boxes
+    private SB_ballPos storageBoxBall;
+    private SB_platformAngle storageBoxAngle;
 
     // PID gains:
     private double Kp = 4;
@@ -16,12 +19,15 @@ public class PidController extends Thread {
 
     // Outputs
     private double outputX;
-    private double outputy;
+    private double outputY;
 
     // PID contributions
-    private double integral = 0;
-    private double derivative = 0;
-    private double prevError = 0;
+    private double integralX = 0;
+    private double derivativeX = 0;
+    private double prevErrorX = 0;
+    private double integralY = 0;
+    private double derivativeY = 0;
+    private double prevErrorY = 0;
     private double DT = 0.010; //sek
 
 
@@ -30,19 +36,39 @@ public class PidController extends Thread {
      *
      * @param storageBoxBall  Storagebox for ball position
      */
-    public PidController(SB_ballPos storageBoxBall) {
+    public PidController(SB_ballPos storageBoxBall, SB_platformAngle storageBoxAngle) {
         this.storageBoxBall = storageBoxBall;
 
     }
 
     public void run() {
+        while(true) {
+            double ballPosX = storageBoxBall.getX();
+            double ballPosY = storageBoxBall.getY();
 
-        double ballPosX = storageBoxBall.getX();
-        double ballPosY = storageBoxBall.getY();
+            double errorX = setpointX - ballPosX;
+            if(errorX <-2 || errorX > 2){
+                integralX = integralX + errorX*DT;
+            }else{
+                integralX = 0;
+            }
+            derivativeX = (errorX - prevErrorX)/DT;
+            outputX = (Kp*errorX) + (Ki*integralX) + (Kd*derivativeX);
+            prevErrorX = errorX;
 
-        outputX = PIDcontroller(setpointX, ballPosX);
-        outputy = PIDcontroller(setpointY, ballPosY);
 
+            double errorY = setpointY - ballPosY;
+            if(errorY <-2 || errorY > 2){
+                integralY = integralY + errorY*DT;
+            }else{
+                integralY = 0;
+            }
+            derivativeY = (errorY - prevErrorY)/DT;
+            outputY = (Kp*errorY) + (Ki*integralY) + (Kd*derivativeY);
+            prevErrorY = errorY;
+
+            this.storageBoxAngle.setAngle(outputX, outputY);
+        }
     }
 
     /**
@@ -53,37 +79,16 @@ public class PidController extends Thread {
      * @return The angle which the platform needs to move in given direction
      */
     double PIDcontroller(double setpoint, double input){
-            double error = setpoint - input;
-
+        /*double error = setpoint - input;
         if(error <-2 || error > 2){
             integral = integral + error*DT;
         }else{
             integral = 0;
         }
-
         derivative = (error - prevError)/DT;
-
         double output = (Kp*error) + (Ki*integral) + (Kd*derivative);
-
         prevError = error;
-
-        return output;
+        return output;*/
+        return 0;
     }
-
-    /**
-     * Gets the x output of the ball position
-     * @return the x output of the ball position
-     */
-    public double getOutputX(){
-        return this.outputX;
-    }
-
-    /**
-     * Gets the y output of the ball position
-     * @return the y output of the ball position
-     */
-    public double getOutputY(){
-        return this.outputy;
-    }
-
 }
