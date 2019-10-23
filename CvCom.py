@@ -1,6 +1,7 @@
 import cv2
 import imutils
 import socket
+import math
 
 #UDP communication
 UDP_IP = '127.0.0.1'
@@ -9,31 +10,35 @@ BUFFER_SIZE = 20
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 #Setup upper and lower bounds of the color space
-lower1_h = 0; 
-lower1_s = 166; 
-lower1_v = 174; 
+lower1_h = 0
+lower1_s = 166
+lower1_v = 174
 
-lower2_h = 131; 
-lower2_s = 88; 
-lower2_v = 55; 
+lower2_h = 131
+lower2_s = 88
+lower2_v = 55
 
-upper1_h = 29; 
-upper1_s = 255; 
-upper1_v = 255; 
+upper1_h = 29
+upper1_s = 255
+upper1_v = 255
 
-upper2_h = 180; 
-upper2_s = 255; 
-upper2_v = 255; 
+upper2_h = 180
+upper2_s = 255
+upper2_v = 255
 
 #Start video capture
 vs = cv2.VideoCapture(0)
 
-while(True):
-    #Read frame from video capture
-    _, frame = vs.read()
+platformCenter = (200, 150)
+platformDiameter = 80
 
-    #Resize, blur and convert to hsv color spectrum
-    frame = cv2.resize(frame,(200, 100))
+while(True):
+    #Read frame from video capture, resize and draw circle
+    _, frame = vs.read()
+    frame = cv2.resize(frame,(400,300))
+    cv2.circle(frame, platformCenter, platformDiameter, (0, 0, 255), 1)
+
+    #Blur and convert to hsv color spectrum
     blur = cv2.GaussianBlur(frame, (11,11),0)
     hsv = cv2.cvtColor(blur, cv2.COLOR_BGR2HSV)
 
@@ -63,10 +68,18 @@ while(True):
         #Get the moments of the contour and find its center
         M = cv2.moments(c)
         center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-        
+
+        #Distance from object to the platform center
+        plat_x = platformCenter[0]
+        plat_y = platformCenter[1]
+        dist_x = plat_x - x
+        dist_y = plat_y - y
+        distance = math.sqrt(dist_x*dist_x + dist_y*dist_y)
+
         #If the radius is grater than ..., draw a circle
-        if radius > 2:
+        if radius > 1 and distance < platformDiameter:
             cv2.circle(frame, center, int(radius), (0, 255, 0), 1)
             cv2.circle(frame, center, 2, (0,255,0),-1)
+
 
         s.sendto(str(x) + "," + str(y) + "\n", (UDP_IP,UDP_PORT))

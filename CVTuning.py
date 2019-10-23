@@ -62,7 +62,7 @@ cv2.setTrackbarPos('upper2_s', 'TT', upper2_s)
 cv2.setTrackbarPos('upper2_v', 'TT', upper2_v)
 
 platformCenter = (200, 150)
-platformDiameter = 100
+platformDiameter = 80
 
 while(True):
     #Read frame from video capture
@@ -112,7 +112,7 @@ while(True):
         distance = math.sqrt(dist_x*dist_x + dist_y*dist_y)
 
         #If the radius is grater than 15, draw a circle
-        if radius > 2 and distance < platformDiameter:
+        if radius > 1 and distance < platformDiameter:
             cv2.circle(frame, center, int(radius), (0, 255, 0), 1)
             cv2.circle(frame, center, 2, (0,255,0),-1)
 
