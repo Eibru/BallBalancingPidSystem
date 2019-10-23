@@ -27,6 +27,11 @@ redLower_2 = (165, 140, 115)
 redUpper_1 = (15, 255,255)
 redUpper_2 = (180, 255,255)
 
+x1 = 101
+x2 = 200
+y1 = 360
+y2 = 460
+
 #Start video capture
 vs = cv2.VideoCapture(0)
 
@@ -46,6 +51,7 @@ cv2.createTrackbar('upper1_v', 'TT', 0, 255, nothing)
 cv2.createTrackbar('upper2_h', 'TT', 0, 180, nothing)
 cv2.createTrackbar('upper2_s', 'TT', 0, 255, nothing)
 cv2.createTrackbar('upper2_v', 'TT', 0, 255, nothing)
+
 cv2.createTrackbar('x', 'TT', 0, 300, nothing)
 cv2.createTrackbar('y', 'TT', 0, 150, nothing)
 cv2.setTrackbarPos('lower1_h', 'TT', lower1_h)
@@ -61,19 +67,27 @@ cv2.setTrackbarPos('upper2_h', 'TT', upper2_h)
 cv2.setTrackbarPos('upper2_s', 'TT', upper2_s)
 cv2.setTrackbarPos('upper2_v', 'TT', upper2_v)
 
-platformCenter = (200, 150)
+
+y1 = 70
+y2 = 230
+x1 = 100
+x2 = 300
+
+platformCenter = (int((x2-x1)/2), int((y2-y1)/2))
 platformDiameter = 80
 
 while(True):
     #Read frame from video capture
     _, frame = vs.read()
     frame = cv2.resize(frame,(400,300))
+    roi = frame[y1:y2,x1:x2]
+    frame = cv2.bitwise_and(roi, roi)
     cv2.circle(frame, platformCenter, platformDiameter, (0, 0, 255), 1)
 
     #Resize, blur and convert to hsv color spectrum
     #frame = cv2.resize(frame,(300, 150))
-    blur = cv2.GaussianBlur(frame, (11,11),0)
-    hsv = cv2.cvtColor(blur, cv2.COLOR_BGR2HSV)
+    #blur = cv2.GaussianBlur(frame, (11,11),0)
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     #Create two masks using lower and upper bounds and combine them
     m1 = cv2.inRange(hsv, (cv2.getTrackbarPos('lower1_h','TT'), cv2.getTrackbarPos('lower1_s','TT'), cv2.getTrackbarPos('lower1_v','TT')), 

@@ -18,9 +18,16 @@ public class InverseKinematics extends Thread {
             double z0 = (Math.sqrt(3)*L/6)*Math.sin(pitch)*Math.cos(roll) + (L/2)*Math.sin(roll);
             double z1 = (Math.sqrt(3)*L/6)*Math.sin(pitch)*Math.cos(roll) - (L/2)*Math.sin(roll);
             double z2 = (-Math.sqrt(3)*L/3)*Math.sin(pitch)*Math.cos(roll);
-            double s0 = Math.asin(z0/r) + 105;
-            double s1 = Math.asin(z1/r) + 90;
-            double s2 = Math.asin(z2/r) + 90;
+            double s0 = Math.toDegrees(Math.asin(z0/r)) + 105;
+            double s1 = Math.toDegrees(Math.asin(z1/r)) + 90;
+            double s2 = Math.toDegrees(Math.asin(z2/r)) + 90;
+
+            System.out.print(s0);
+            System.out.print(", ");
+            System.out.print(s1);
+            System.out.print(", ");
+            System.out.println(s2);
+
             if(s0 < 105){
                 s0 = 105;
             } else if(s0 > 170){

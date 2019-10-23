@@ -9,17 +9,17 @@ public class PidController extends Thread {
     private SB_platformAngle storageBoxAngle;
 
     // PID gains:
-    private double Kp = 4;
+    private double Kp = 1;
     private double Ki = 0;
-    private double Kd = 0;
+    private double Kd = 0.5;
 
     // Setpoint
     private double setpointX = 0;
     private double setpointY = 0;
 
     // Outputs
-    private double outputX;
-    private double outputY;
+    private double outputX = 0;
+    private double outputY = 0;
 
     // PID contributions
     private double integralX = 0;
@@ -38,7 +38,7 @@ public class PidController extends Thread {
      */
     public PidController(SB_ballPos storageBoxBall, SB_platformAngle storageBoxAngle) {
         this.storageBoxBall = storageBoxBall;
-
+        this.storageBoxAngle = storageBoxAngle;
     }
 
     public void run() {
@@ -67,7 +67,29 @@ public class PidController extends Thread {
             outputY = (Kp*errorY) + (Ki*integralY) + (Kd*derivativeY);
             prevErrorY = errorY;
 
+            if(outputX > 30){
+                outputX = 30;
+            } else if(outputX < -30){
+                outputX = -30;
+            }
+            if(outputY > 30){
+                outputY = 30;
+            } else if(outputY < -30){
+                outputY = -30;
+            }
 
+            try {
+                Thread.sleep(Math.round(DT));
+            } catch (Exception ex){
+                System.out.println(ex.toString());
+            }
+
+            //System.out.print(outputX);
+            //System.out.print(", ");
+            //System.out.println(outputY);
+            //System.out.print(ballPosX);
+            //System.out.print(", ");
+            //System.out.println(ballPosY);
 
             this.storageBoxAngle.setAngle(outputX, outputY);
         }
