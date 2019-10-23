@@ -18,9 +18,24 @@ public class InverseKinematics extends Thread {
             double z0 = (Math.sqrt(3)*L/6)*Math.sin(pitch)*Math.cos(roll) + (L/2)*Math.sin(roll);
             double z1 = (Math.sqrt(3)*L/6)*Math.sin(pitch)*Math.cos(roll) - (L/2)*Math.sin(roll);
             double z2 = (-Math.sqrt(3)*L/3)*Math.sin(pitch)*Math.cos(roll);
-            double s0 = Math.asin(z0/r);
-            double s1 = Math.asin(z1/r);
-            double s2 = Math.asin(z2/r);
+            double s0 = Math.asin(z0/r) + 105;
+            double s1 = Math.asin(z1/r) + 90;
+            double s2 = Math.asin(z2/r) + 90;
+            if(s0 < 105){
+                s0 = 105;
+            } else if(s0 > 170){
+                s0 = 170;
+            }
+            if(s1 < 90){
+                s1 = 90;
+            } else if(s1 > 155){
+                s1 = 155;
+            }
+            if(s2 < 90){
+                s2 = 90;
+            } else if(s2 > 155){
+                s2 = 155;
+            }
             this.servoStorage.set(s0,s1,s2);
         }
     }

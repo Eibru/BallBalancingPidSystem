@@ -67,6 +67,8 @@ public class PidController extends Thread {
             outputY = (Kp*errorY) + (Ki*integralY) + (Kd*derivativeY);
             prevErrorY = errorY;
 
+
+
             this.storageBoxAngle.setAngle(outputX, outputY);
         }
     }
