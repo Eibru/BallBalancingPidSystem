@@ -9,7 +9,7 @@ public class PidController extends Thread {
     private SB_platformAngle storageBoxAngle;
 
     // PID gains:
-    private double Kp = 1;
+    private double Kp = 3;
     private double Ki = 0;
     private double Kd = 0.5;
 
@@ -84,12 +84,12 @@ public class PidController extends Thread {
                 System.out.println(ex.toString());
             }
 
-            //System.out.print(outputX);
-            //System.out.print(", ");
-            //System.out.println(outputY);
-            //System.out.print(ballPosX);
-            //System.out.print(", ");
-            //System.out.println(ballPosY);
+            /*System.out.print(outputX);
+            System.out.print(", ");
+            System.out.println(outputY);
+            System.out.print(ballPosX);
+            System.out.print(", ");
+            System.out.println(ballPosY);*/
 
             this.storageBoxAngle.setAngle(outputX, outputY);
         }

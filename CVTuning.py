@@ -19,15 +19,19 @@ upper2_h = 180
 upper2_s = 255
 upper2_v = 255
 
+#Define size of image
+imgX = 800
+imgY = 600
+
 #Define the portion of the image the program should look at
-xMin = 0
-xMax = 400 
-yMin = 0
-yMax = 300
+xMin = 198
+xMax = 458
+yMin = 90
+yMax = 350
 
 #Define platform center and diameter
-platformCenter = [200, 150]
-platformRadius = 80
+platformCenter = [131, 128]
+platformRadius = 123
 
 def nothing(value):
     pass
@@ -35,10 +39,6 @@ def nothing(value):
 #Create window
 cv2.namedWindow('Image')
 cv2.namedWindow('Options')
-
-#Define size of image
-imgX = 400
-imgY = 300
 
 #Create trackbars
 cv2.createTrackbar('lower1_h', 'Options', 0, 180, nothing)
@@ -53,13 +53,13 @@ cv2.createTrackbar('upper1_v', 'Options', 0, 255, nothing)
 cv2.createTrackbar('upper2_h', 'Options', 0, 180, nothing)
 cv2.createTrackbar('upper2_s', 'Options', 0, 255, nothing)
 cv2.createTrackbar('upper2_v', 'Options', 0, 255, nothing)
-cv2.createTrackbar('xMin', 'Options', 0, imgX, nothing)
-cv2.createTrackbar('xMax', 'Options', 0, imgX, nothing)
-cv2.createTrackbar('yMin', 'Options', 0, imgY, nothing)
-cv2.createTrackbar('yMax', 'Options', 0, imgY, nothing)
-cv2.createTrackbar('Diameter', 'Options', 0, 200, nothing)
-cv2.createTrackbar('PlatformX', 'Options', 0, imgX, nothing)
-cv2.createTrackbar('PlatformY', 'Options', 0, imgY, nothing)
+cv2.createTrackbar('xMin', 'Image', 0, imgX, nothing)
+cv2.createTrackbar('xMax', 'Image', 0, imgX, nothing)
+cv2.createTrackbar('yMin', 'Image', 0, imgY, nothing)
+cv2.createTrackbar('yMax', 'Image', 0, imgY, nothing)
+cv2.createTrackbar('Diameter', 'Image', 0, 200, nothing)
+cv2.createTrackbar('PlatformX', 'Image', 0, imgX, nothing)
+cv2.createTrackbar('PlatformY', 'Image', 0, imgY, nothing)
 cv2.createTrackbar('x', 'Image', 0, imgX, nothing)
 cv2.createTrackbar('y', 'Image', 0, imgY, nothing)
 
@@ -76,31 +76,31 @@ cv2.setTrackbarPos('upper1_v', 'Options', upper1_v)
 cv2.setTrackbarPos('upper2_h', 'Options', upper2_h)
 cv2.setTrackbarPos('upper2_s', 'Options', upper2_s)
 cv2.setTrackbarPos('upper2_v', 'Options', upper2_v)
-cv2.setTrackbarPos('xMin', 'Options', xMin)
-cv2.setTrackbarPos('xMax', 'Options', xMax)
-cv2.setTrackbarPos('yMin', 'Options', yMin)
-cv2.setTrackbarPos('yMax', 'Options', yMax)
-cv2.setTrackbarPos('Diameter', 'Options', platformRadius)
-cv2.setTrackbarPos('PlatformX', 'Options', platformCenter[0])
-cv2.setTrackbarPos('PlatformY', 'Options', platformCenter[1])
+cv2.setTrackbarPos('xMin', 'Image', xMin)
+cv2.setTrackbarPos('xMax', 'Image', xMax)
+cv2.setTrackbarPos('yMin', 'Image', yMin)
+cv2.setTrackbarPos('yMax', 'Image', yMax)
+cv2.setTrackbarPos('Diameter', 'Image', platformRadius)
+cv2.setTrackbarPos('PlatformX', 'Image', platformCenter[0])
+cv2.setTrackbarPos('PlatformY', 'Image', platformCenter[1])
 
 #Start video capture
 vs = cv2.VideoCapture(0)
 
 while(True):
-    xMin = cv2.getTrackbarPos('xMin','Options')
-    xMax = cv2.getTrackbarPos('xMax','Options')
-    yMin = cv2.getTrackbarPos('yMin','Options')
-    yMax = cv2.getTrackbarPos('yMax','Options')
-    platformRadius = cv2.getTrackbarPos('Diameter','Options')
-    platformCenter[0] = cv2.getTrackbarPos('PlatformX','Options')
-    platformCenter[1] = cv2.getTrackbarPos('PlatformY','Options')
+    xMin = cv2.getTrackbarPos('xMin','Image')
+    xMax = cv2.getTrackbarPos('xMax','Image')
+    yMin = cv2.getTrackbarPos('yMin','Image')
+    yMax = cv2.getTrackbarPos('yMax','Image')
+    platformRadius = cv2.getTrackbarPos('Diameter','Image')
+    platformCenter[0] = cv2.getTrackbarPos('PlatformX','Image')
+    platformCenter[1] = cv2.getTrackbarPos('PlatformY','Image')
 
     #Read frame from video capture
     _,frame = vs.read()
 
     #Resize frame
-    frame = cv2.resize(frame,(imgX,imgY))
+    #frame = cv2.resize(frame,(imgX,imgY))
 
     #Crop frame
     roi = frame[yMin:yMax,xMin:xMax]
@@ -116,6 +116,7 @@ while(True):
     m = np.zeros(shape = hsv.shape, dtype = "uint8")
     cv2.circle(m, (platformCenter[0], platformCenter[1]), platformRadius+5, color=(255, 255, 255), thickness=-1)
     hsv = cv2.bitwise_and(hsv,m)
+    cv2.imshow('hsv', hsv)
 
     #Create mask
     m1 = cv2.inRange(hsv, (cv2.getTrackbarPos('lower1_h','Options'), cv2.getTrackbarPos('lower1_s','Options'), cv2.getTrackbarPos('lower1_v','Options')), 
@@ -160,8 +161,8 @@ while(True):
                 cv2.setTrackbarPos('y','Image',center[1])
 
     #Show image
-    cv2.imshow('Image', frame)
-    cv2.imshow('Options',mask)
+    cv2.imshow('Frame', frame)
+    cv2.imshow('Mask',mask)
 
     #Break if esc key is pressed
     if(cv2.waitKey(1) == 27):
