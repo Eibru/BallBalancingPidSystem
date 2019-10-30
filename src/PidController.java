@@ -38,7 +38,7 @@ public class PidController extends Thread {
      */
     public PidController(SB_ballPos storageBoxBall, SB_platformAngle storageBoxAngle) {
         this.storageBoxBall = storageBoxBall;
-
+        this.storageBoxAngle = storageBoxAngle;
     }
 
     public void run() {
