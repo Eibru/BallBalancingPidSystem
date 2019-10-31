@@ -5,7 +5,7 @@ import numpy as np
 
 #UDP communication
 UDP_IP = '127.0.0.1'
-UDP_PORT = 5556
+UDP_PORT = 5555
 BUFFER_SIZE = 20 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -42,9 +42,6 @@ vs = cv2.VideoCapture(0)
 #Tells the program to display the image or not
 showImage = True
 
-#Create circular mask
-m = np.zeros(shape = (imgY,imgX,3), dtype = "uint8")
-cv2.circle(m, (platformCenter[0], platformCenter[1]), platformRadius+5, color=(255, 255, 255), thickness=-1)
 
 while(True):
     #Read frame from video capture
@@ -64,6 +61,8 @@ while(True):
     hsv = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
 
     #Apply circular mask
+    m = np.zeros(shape = hsv.shape, dtype = "uint8")
+    cv2.circle(m, (platformCenter[0], platformCenter[1]), platformRadius+5, color=(255, 255, 255), thickness=-1)
     hsv = cv2.bitwise_and(hsv,m)
 
     #Create mask

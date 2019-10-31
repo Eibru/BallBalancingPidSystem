@@ -36,6 +36,7 @@ public class ServoCom extends Thread {
                 }   catch (InterruptedException e) {
                 }
                 byte[] buf = (this.storageBox.get().toString() + "\n").getBytes();
+                eventServoStorageBox.toggle();
                 DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 5556);
                 socket.send(packet);
             }

@@ -28,6 +28,7 @@ public class InverseKinematics extends Thread {
 
             double roll = Math.toRadians(platformStorage.getRoll());
             double pitch = Math.toRadians(platformStorage.getPitch());
+            eventPlatformAngleStorageBox.toggle();
             double z0 = ((Math.sqrt(3)*L)/6)*Math.sin(pitch)*Math.cos(roll) + (L/2)*Math.sin(roll);
             double z1 = ((Math.sqrt(3)*L)/6)*Math.sin(pitch)*Math.cos(roll) - (L/2)*Math.sin(roll);
             double z2 = ((-Math.sqrt(3)*L)/3)*Math.sin(pitch)*Math.cos(roll);
@@ -35,11 +36,7 @@ public class InverseKinematics extends Thread {
             double s1 = Math.toDegrees(Math.asin(z1/r)) + 90;
             double s2 = Math.toDegrees(Math.asin(z2/r)) + 90;
 
-            System.out.print(s0);
-            System.out.print(", ");
-            System.out.print(s1);
-            System.out.print(", ");
-            System.out.println(s2);
+            System.out.println("--Kinematics--\n"+s0+", "+s1+", "+s2+"\n");
 
             if(s0 < 105){
                 s0 = 105;
@@ -63,6 +60,7 @@ public class InverseKinematics extends Thread {
             }   catch (InterruptedException e) {
             }
             this.servoStorage.set(s0,s1,s2);
+            eventServoStorageBox.toggle();
         }
     }
 }

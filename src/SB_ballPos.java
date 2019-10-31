@@ -15,7 +15,7 @@ public class SB_ballPos {
      * Sets the ball position
      * @param ballPos the ball position object
      */
-    public void set(BallPos ballPos){
+    public synchronized void set(BallPos ballPos){
         this.ballPos = ballPos;
     }
 
@@ -24,7 +24,7 @@ public class SB_ballPos {
      * @param x the x position of the ball
      * @param y the y position of the ball
      */
-    public void set(double x, double y){
+    public synchronized void set(double x, double y){
         this.ballPos.set(x,y);
     }
 
@@ -32,7 +32,7 @@ public class SB_ballPos {
      * Gets the ball position
      * @return the ball position
      */
-    public BallPos get(){
+    public synchronized BallPos get(){
         return this.ballPos;
     }
 
@@ -40,7 +40,7 @@ public class SB_ballPos {
      * Gets the x value of the ball position
      * @return the x value of the ball position
      */
-    public double getX(){
+    public synchronized double getX(){
         return this.ballPos.getX();
     }
 
@@ -48,7 +48,7 @@ public class SB_ballPos {
      * Gets the y value of the ball position
      * @return the y value of the ball position
      */
-    public double getY(){
+    public synchronized double getY(){
         return this.ballPos.getY();
     }
 }

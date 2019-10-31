@@ -12,15 +12,15 @@ public class SB_frames {
         this.image = image;
     }
 
-    public int getWidth() {
+    public synchronized int getWidth() {
         return width;
     }
 
-    public int getHeight() {
+    public synchronized int getHeight() {
         return height;
     }
 
-    public BufferedImage getImage() {
+    public synchronized BufferedImage getImage() {
         return image;
     }
 

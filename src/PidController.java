@@ -55,6 +55,7 @@ public class PidController extends Thread {
             }
             double ballPosX = storageBoxBall.getX();
             double ballPosY = storageBoxBall.getY();
+            eventBallStorageBox.toggle();
 
             double errorX = setpointX - ballPosX;
             if(errorX <-2 || errorX > 2){
@@ -94,12 +95,7 @@ public class PidController extends Thread {
                 System.out.println(ex.toString());
             }
 
-            //System.out.print(outputX);
-            //System.out.print(", ");
-            //System.out.println(outputY);
-            //System.out.print(ballPosX);
-            //System.out.print(", ");
-            //System.out.println(ballPosY);
+            System.out.println("--PidController--\n"+outputX+", "+outputY+"\n"+ballPosX+", "+ballPosY+"\n");
 
             try {
                 // wait conditionally for the correct state
@@ -107,6 +103,7 @@ public class PidController extends Thread {
             }   catch (InterruptedException e) {
             }
             this.storageBoxAngle.setAngle(outputX, outputY);
+            eventPlatformAngleStorageBox.toggle();
         }
     }
 
