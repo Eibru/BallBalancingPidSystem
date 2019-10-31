@@ -3,6 +3,9 @@
  */
 
 public class PidController extends Thread {
+   // create a shared Event handler class
+   private Event eventBallStorageBox;
+   private Event eventPlatformAngleStorageBox;
 
     //Storage boxes
     private SB_ballPos storageBoxBall;
@@ -36,13 +39,20 @@ public class PidController extends Thread {
      *
      * @param storageBoxBall  Storagebox for ball position
      */
-    public PidController(SB_ballPos storageBoxBall, SB_platformAngle storageBoxAngle) {
+    public PidController(Event eventBallStorageBox, SB_ballPos storageBoxBall, Event eventPlatformAngleStorageBox, SB_platformAngle storageBoxAngle) {
         this.storageBoxBall = storageBoxBall;
         this.storageBoxAngle = storageBoxAngle;
+        this.eventBallStorageBox = eventBallStorageBox;
+        this.eventPlatformAngleStorageBox = eventPlatformAngleStorageBox;
     }
 
     public void run() {
         while(true) {
+            try {
+                // wait conditionally for the correct state
+                eventBallStorageBox.await(Event.EventState.UP);
+            }   catch (InterruptedException e) {
+            }
             double ballPosX = storageBoxBall.getX();
             double ballPosY = storageBoxBall.getY();
 
@@ -91,6 +101,11 @@ public class PidController extends Thread {
             //System.out.print(", ");
             //System.out.println(ballPosY);
 
+            try {
+                // wait conditionally for the correct state
+                eventPlatformAngleStorageBox.await(Event.EventState.DOWN);
+            }   catch (InterruptedException e) {
+            }
             this.storageBoxAngle.setAngle(outputX, outputY);
         }
     }
