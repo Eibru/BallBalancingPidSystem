@@ -25,6 +25,9 @@ public class ServoCom extends Thread {
      * Sends the servo positions to the python udp server
      */
     public void run(){
+        long endTime = 0;
+        long startTime = 0;
+        long cycleTime = 0;
         try {
             DatagramSocket socket = new DatagramSocket();
             InetAddress address = InetAddress.getByName("localhost");
@@ -39,6 +42,12 @@ public class ServoCom extends Thread {
                 eventServoStorageBox.toggle();
                 DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 5556);
                 socket.send(packet);
+
+                //Test cycletime
+                /*endTime = System.currentTimeMillis();
+                cycleTime = endTime - startTime;
+                System.out.println(cycleTime);
+                startTime = System.currentTimeMillis();*/
             }
         } catch (Exception ex) {
             ex.printStackTrace();

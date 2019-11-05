@@ -18,6 +18,10 @@ public class main {
         InverseKinematics inverseKinematics = new InverseKinematics(eventPlatformAngleStorageBox, platformAngleStorageBox, eventServoStorageBox, servoStorageBox);
         ServoCom servoCom = new ServoCom(eventServoStorageBox, servoStorageBox);
 
+        //Test
+        platformAngleStorageBox.setAngle(0,0);
+        eventPlatformAngleStorageBox.toggle();
+
         camCom.start();
         pidController.start();
         inverseKinematics.start();

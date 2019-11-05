@@ -47,7 +47,8 @@ public class CamCom extends Thread {
                 this.storageBox.set(ballPos);
                 eventBallStorageBox.toggle();
 
-                System.out.println("--CamCom--\n"+ballPos.toString());
+                //Debug
+                //System.out.println("--CamCom--\n"+ballPos.toString());
             }
         }
         catch(Exception ex) {

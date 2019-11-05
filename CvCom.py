@@ -27,14 +27,14 @@ upper2_s = 255
 upper2_v = 255
 
 #Define the portion of the image the program should look at
-xMin = 198
-xMax = 458
-yMin = 90
-yMax = 350
+xMin = 172
+xMax = 482
+yMin = 92
+yMax = 407
 
 #Define platform center and diameter
-platformCenter = (131, 128)
-platformRadius = 123
+platformCenter = (157, 155)
+platformRadius = 153
 
 #Start video capture
 vs = cv2.VideoCapture(0)

@@ -12,9 +12,9 @@ public class PidController extends Thread {
     private SB_platformAngle storageBoxAngle;
 
     // PID gains:
-    private double Kp = 1;
-    private double Ki = 0;
-    private double Kd = 0.5;
+    private double Kp = 0.13;
+    private double Ki = 0.0;
+    private double Kd = 0.001;
 
     // Setpoint
     private double setpointX = 0;
@@ -31,7 +31,7 @@ public class PidController extends Thread {
     private double integralY = 0;
     private double derivativeY = 0;
     private double prevErrorY = 0;
-    private double DT = 0.010; //sek
+    private double DT = 0.001; //sek
 
 
     /**
@@ -90,19 +90,20 @@ public class PidController extends Thread {
             }
 
             try {
-                Thread.sleep(Math.round(DT));
+                Thread.sleep(Math.round(DT*1000));
             } catch (Exception ex){
                 System.out.println(ex.toString());
             }
 
-            System.out.println("--PidController--\n"+outputX+", "+outputY+"\n"+ballPosX+", "+ballPosY+"\n");
+            //Debug
+            //System.out.println("--PidController--\n"+outputX+", "+outputY+"\n"+ballPosX+", "+ballPosY+"\n");
 
             try {
                 // wait conditionally for the correct state
                 eventPlatformAngleStorageBox.await(Event.EventState.DOWN);
             }   catch (InterruptedException e) {
             }
-            this.storageBoxAngle.setAngle(outputX, outputY);
+            this.storageBoxAngle.setAngle(outputX, -outputY);
             eventPlatformAngleStorageBox.toggle();
         }
     }
