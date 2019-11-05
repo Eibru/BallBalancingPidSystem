@@ -4,36 +4,39 @@ public class InverseKinematics extends Thread {
     private SB_platformAngle platformStorage;
     private SB_servoPos servoStorage;
 
-    public InverseKinematics(SB_platformAngle platformStorage, SB_servoPos servoStorage){
+    // create a shared Event handler class
+    private Event eventPlatformAngleStorageBox;
+    private Event eventServoStorageBox;
+
+
+    public InverseKinematics(Event eventPlatformAngleStorageBox, SB_platformAngle platformStorage, Event eventServoStorageBox, SB_servoPos servoStorage){
         this.platformStorage = platformStorage;
         this.servoStorage = servoStorage;
+        this.eventPlatformAngleStorageBox = eventPlatformAngleStorageBox;
+        this.eventServoStorageBox = eventServoStorageBox;
     }
 
     public void run(){
         double L = 8.6;
         double r = 7.7;
-        double z = 8;
         while(true){
+            try {
+                // wait conditionally for the correct state
+                eventPlatformAngleStorageBox.await(Event.EventState.UP);
+            }   catch (InterruptedException e) {
+            }
+
             double roll = Math.toRadians(platformStorage.getRoll());
             double pitch = Math.toRadians(platformStorage.getPitch());
-            double z0 = (Math.sqrt(3)*L/6)*Math.sin(pitch)*Math.cos(roll) + (L/2)*Math.sin(roll);
-            double z1 = (Math.sqrt(3)*L/6)*Math.sin(pitch)*Math.cos(roll) - (L/2)*Math.sin(roll);
-            double z2 = (-Math.sqrt(3)*L/3)*Math.sin(pitch)*Math.cos(roll);
-            /*double s0 = Math.toDegrees(Math.asin(z0/r)) + 105;
+            eventPlatformAngleStorageBox.toggle();
+            double z0 = ((Math.sqrt(3)*L)/6)*Math.sin(pitch)*Math.cos(roll) + (L/2)*Math.sin(roll);
+            double z1 = ((Math.sqrt(3)*L)/6)*Math.sin(pitch)*Math.cos(roll) - (L/2)*Math.sin(roll);
+            double z2 = ((-Math.sqrt(3)*L)/3)*Math.sin(pitch)*Math.cos(roll);
+            double s0 = Math.toDegrees(Math.asin(z0/r)) + 105;
             double s1 = Math.toDegrees(Math.asin(z1/r)) + 90;
-            double s2 = Math.toDegrees(Math.asin(z2/r)) + 90;*/
-            double s0 = 105-Math.toDegrees(Math.asin(z0/r));
-            double s1 = 90-Math.toDegrees(Math.asin(z1/r));
-            double s2 = 90-Math.toDegrees(Math.asin(z2/r));
-            //double s0 = Math.toDegrees(Math.acos( ((z0*z0) - (r*r))/(2*z0))) + 105;
-            //double s1 = Math.toDegrees(Math.acos(((z1*z1) - (r*r))/(2*z1))) + 90;
-            //double s2 = Math.toDegrees(Math.acos(((z2*z2) - (r*r))/(2*z2))) + 90;
+            double s2 = Math.toDegrees(Math.asin(z2/r)) + 90;
 
-            System.out.print(s0);
-            System.out.print(", ");
-            System.out.print(s1);
-            System.out.print(", ");
-            System.out.println(s2);
+            System.out.println("--Kinematics--\n"+s0+", "+s1+", "+s2+"\n");
 
             if(s0 < 105){
                 s0 = 105;
@@ -50,7 +53,14 @@ public class InverseKinematics extends Thread {
             } else if(s2 > 155){
                 s2 = 155;
             }
+
+            try {
+                // wait conditionally for the correct state
+                eventPlatformAngleStorageBox.await(Event.EventState.DOWN);
+            }   catch (InterruptedException e) {
+            }
             this.servoStorage.set(s0,s1,s2);
+            eventServoStorageBox.toggle();
         }
     }
 }

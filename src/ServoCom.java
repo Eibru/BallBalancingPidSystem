@@ -9,12 +9,16 @@ import java.net.InetAddress;
 public class ServoCom extends Thread {
     private SB_servoPos storageBox;
 
+    // create a shared Event handler class
+    private Event eventServoStorageBox;
+
     /**
      * Constructor
      * @param storageBox the servo storagebox
      */
-    public ServoCom(SB_servoPos storageBox){
+    public ServoCom(Event eventServoStorageBox, SB_servoPos storageBox){
         this.storageBox = storageBox;
+        this.eventServoStorageBox = eventServoStorageBox;
     }
 
     /**
@@ -26,7 +30,13 @@ public class ServoCom extends Thread {
             InetAddress address = InetAddress.getByName("localhost");
 
             while (true) {
+                try {
+                    // wait conditionally for the correct state
+                    eventServoStorageBox.await(Event.EventState.UP);
+                }   catch (InterruptedException e) {
+                }
                 byte[] buf = (this.storageBox.get().toString() + "\n").getBytes();
+                eventServoStorageBox.toggle();
                 DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 5556);
                 socket.send(packet);
             }

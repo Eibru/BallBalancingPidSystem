@@ -2,16 +2,16 @@ public class SB_platformAngle {
     private double pitch;
     private double roll;
 
-    public void setAngle(double pitch, double roll){
+    public synchronized void setAngle(double pitch, double roll){
         this.pitch = pitch;
         this.roll = roll;
     }
 
-    public double getPitch(){
+    public synchronized double getPitch(){
         return this.pitch;
     }
 
-    public double getRoll(){
+    public synchronized double getRoll(){
         return this.roll;
     }
 }

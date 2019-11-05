@@ -3,13 +3,16 @@
  */
 
 public class PidController extends Thread {
+   // create a shared Event handler class
+   private Event eventBallStorageBox;
+   private Event eventPlatformAngleStorageBox;
 
     //Storage boxes
     private SB_ballPos storageBoxBall;
     private SB_platformAngle storageBoxAngle;
 
     // PID gains:
-    private double Kp = 3;
+    private double Kp = 1;
     private double Ki = 0;
     private double Kd = 0.5;
 
@@ -36,15 +39,23 @@ public class PidController extends Thread {
      *
      * @param storageBoxBall  Storagebox for ball position
      */
-    public PidController(SB_ballPos storageBoxBall, SB_platformAngle storageBoxAngle) {
+    public PidController(Event eventBallStorageBox, SB_ballPos storageBoxBall, Event eventPlatformAngleStorageBox, SB_platformAngle storageBoxAngle) {
         this.storageBoxBall = storageBoxBall;
         this.storageBoxAngle = storageBoxAngle;
+        this.eventBallStorageBox = eventBallStorageBox;
+        this.eventPlatformAngleStorageBox = eventPlatformAngleStorageBox;
     }
 
     public void run() {
         while(true) {
+            try {
+                // wait conditionally for the correct state
+                eventBallStorageBox.await(Event.EventState.UP);
+            }   catch (InterruptedException e) {
+            }
             double ballPosX = storageBoxBall.getX();
             double ballPosY = storageBoxBall.getY();
+            eventBallStorageBox.toggle();
 
             double errorX = setpointX - ballPosX;
             if(errorX <-2 || errorX > 2){
@@ -84,14 +95,15 @@ public class PidController extends Thread {
                 System.out.println(ex.toString());
             }
 
-            /*System.out.print(outputX);
-            System.out.print(", ");
-            System.out.println(outputY);
-            System.out.print(ballPosX);
-            System.out.print(", ");
-            System.out.println(ballPosY);*/
+            System.out.println("--PidController--\n"+outputX+", "+outputY+"\n"+ballPosX+", "+ballPosY+"\n");
 
+            try {
+                // wait conditionally for the correct state
+                eventPlatformAngleStorageBox.await(Event.EventState.DOWN);
+            }   catch (InterruptedException e) {
+            }
             this.storageBoxAngle.setAngle(outputX, outputY);
+            eventPlatformAngleStorageBox.toggle();
         }
     }
 

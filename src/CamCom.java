@@ -6,13 +6,15 @@ import java.net.DatagramSocket;
  */
 public class CamCom extends Thread {
     private SB_ballPos storageBox;
+    private Event eventBallStorageBox;
 
     /**
      * Contructor
      * @param storageBox the ballPos storagebox
      */
-    public CamCom(SB_ballPos storageBox){
+    public CamCom(Event eventBallStorageBox, SB_ballPos storageBox){
         this.storageBox = storageBox;
+        this.eventBallStorageBox = eventBallStorageBox;
     }
 
     /**
@@ -25,6 +27,7 @@ public class CamCom extends Thread {
             byte[] buf = new byte[256];
 
             while(true){
+
                 //Get message from udp server
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
                 socket.receive(packet);
@@ -35,10 +38,16 @@ public class CamCom extends Thread {
                 String[] pos = data.split("\n")[0].split(",");
                 BallPos ballPos = new BallPos(Double.parseDouble(pos[0]), Double.parseDouble(pos[1]));
 
+                try {
+                    // wait conditionally for the correct state
+                    eventBallStorageBox.await(Event.EventState.DOWN);
+                }   catch (InterruptedException e) {
+                }
                 //Put data into storagebox
                 this.storageBox.set(ballPos);
+                eventBallStorageBox.toggle();
 
-                //System.out.println(ballPos.toString());
+                System.out.println("--CamCom--\n"+ballPos.toString());
             }
         }
         catch(Exception ex) {
