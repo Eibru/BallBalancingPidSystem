@@ -5,16 +5,14 @@ import java.net.InetAddress;
 /**
  * Reads servo position and sends it to the python servo controller over TCP
  */
-
 public class ServoCom extends Thread {
     private SB_servoPos storageBox;
-
-    // create a shared Event handler class
     private Event eventServoStorageBox;
 
     /**
      * Constructor
-     * @param storageBox the servo storagebox
+     * @param eventServoStorageBox event for the servopos storage box
+     * @param storageBox the servo storage box
      */
     public ServoCom(Event eventServoStorageBox, SB_servoPos storageBox){
         this.storageBox = storageBox;
@@ -25,25 +23,27 @@ public class ServoCom extends Thread {
      * Sends the servo positions to the python udp server
      */
     public void run(){
+        //For testing cycle time
         long endTime = 0;
         long startTime = 0;
         long cycleTime = 0;
+
         try {
             DatagramSocket socket = new DatagramSocket();
             InetAddress address = InetAddress.getByName("localhost");
 
             while (true) {
                 try {
-                    // wait conditionally for the correct state
-                    eventServoStorageBox.await(Event.EventState.UP);
-                }   catch (InterruptedException e) {
-                }
+                    //Wait conditionally for the correct state
+                    this.eventServoStorageBox.await(Event.EventState.UP);
+                }   catch (InterruptedException e) {}
+
                 byte[] buf = (this.storageBox.get().toString() + "\n").getBytes();
-                eventServoStorageBox.toggle();
+                this.eventServoStorageBox.toggle();
                 DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 5556);
                 socket.send(packet);
 
-                //Test cycletime
+                //Test cycle time
                 /*endTime = System.currentTimeMillis();
                 cycleTime = endTime - startTime;
                 System.out.println(cycleTime);

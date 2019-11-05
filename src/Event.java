@@ -1,48 +1,69 @@
+/**
+ * Event class
+ */
 public class Event {
 
-    // the available event states defined:
-    public enum EventState {UP, DOWN};
+    //The available event states defined:
+    public enum EventState {UP, DOWN}
 
     private EventState currentState;
 
-    // Constructor for the Event:
+    /**
+     * Constructor
+     */
     public Event() {
         // Initializing the current event state to DOWN
         // to let the Sender start:
-        currentState = EventState.DOWN;
+        this.currentState = EventState.DOWN;
     }
 
-    // wait conditionally for the correct state
+    /**
+     * Wait conditionally for the correct state
+     * @param state the state to wait for
+     * @throws InterruptedException exception
+     */
     public synchronized void await(EventState state)
             throws InterruptedException {
-        while (currentState != state) {
+        while (this.currentState != state) {
             wait();
         }
     }
 
-    // set the current state
+    /**
+     * Set state to UP
+     */
     public synchronized void set() {
-        currentState = EventState.UP;
+        this.currentState = EventState.UP;
         notify();
     }
-    // reset the current state
+
+    /**
+     * Reset state
+     */
     public synchronized void reset() {
-        currentState = EventState.DOWN;
+        this.currentState = EventState.DOWN;
         notify();
     }
-    // toggle the current state
+
+    /**
+     * Toggle the state
+     */
     public synchronized void toggle() {
-        if (currentState == EventState.DOWN) {
-            currentState = EventState.UP;
+        if (this.currentState == EventState.DOWN) {
+            this.currentState = EventState.UP;
         }
         else {
-            currentState = EventState.DOWN;
+            this.currentState = EventState.DOWN;
         }
         notify();
     }
-    // return the current state
+
+    /**
+     * Returns the current state
+     * @return the current state
+     */
     public synchronized EventState state() {
-        return currentState;
+        return this.currentState;
     }
 
 

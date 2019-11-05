@@ -10,6 +10,7 @@ public class CamCom extends Thread {
 
     /**
      * Contructor
+     * @param eventBallStorageBox event for the ball storage box
      * @param storageBox the ballPos storagebox
      */
     public CamCom(Event eventBallStorageBox, SB_ballPos storageBox){
@@ -39,13 +40,15 @@ public class CamCom extends Thread {
                 BallPos ballPos = new BallPos(Double.parseDouble(pos[0]), Double.parseDouble(pos[1]));
 
                 try {
-                    // wait conditionally for the correct state
-                    eventBallStorageBox.await(Event.EventState.DOWN);
-                }   catch (InterruptedException e) {
-                }
-                //Put data into storagebox
+                    //Wait conditionally for the correct state
+                    this.eventBallStorageBox.await(Event.EventState.DOWN);
+                }   catch (InterruptedException e) {}
+
+                //Put data into storage box
                 this.storageBox.set(ballPos);
-                eventBallStorageBox.toggle();
+
+                //Toggle the event state
+                this.eventBallStorageBox.toggle();
 
                 //Debug
                 //System.out.println("--CamCom--\n"+ballPos.toString());
