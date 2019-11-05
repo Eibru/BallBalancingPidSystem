@@ -10,15 +10,7 @@ public class PidController extends Thread {
     //Storage boxes
     private SB_ballPos storageBoxBall;
     private SB_platformAngle storageBoxAngle;
-
-    //PID gains
-    private double Kp = 0.13;
-    private double Ki = 0.0;
-    private double Kd = 0.001;
-
-    //Setpoint
-    private double setpointX = 0;
-    private double setpointY = 0;
+    private SB_pidValues storageBoxPid;
 
     //Outputs
     private double outputX = 0;
@@ -40,18 +32,36 @@ public class PidController extends Thread {
      * @param eventPlatformAngleStorageBox event for the platform storage box
      * @param storageBoxAngle storage box for the platform angle
      */
-    public PidController(Event eventBallStorageBox, SB_ballPos storageBoxBall, Event eventPlatformAngleStorageBox, SB_platformAngle storageBoxAngle) {
+    public PidController(Event eventBallStorageBox, SB_ballPos storageBoxBall, Event eventPlatformAngleStorageBox, SB_platformAngle storageBoxAngle, SB_pidValues storageBoxPid) {
         this.storageBoxBall = storageBoxBall;
         this.storageBoxAngle = storageBoxAngle;
         this.eventBallStorageBox = eventBallStorageBox;
         this.eventPlatformAngleStorageBox = eventPlatformAngleStorageBox;
+        this.storageBoxPid = storageBoxPid;
     }
 
     /**
      * Calculates the pitch and roll of the platform when ball position is given
      */
     public void run() {
+        PidValues pidValues = this.storageBoxPid.getPidValues();
+        double setpointX = pidValues.getSetpointX();
+        double setpointY = pidValues.getSetpointY();
+        double Kp = pidValues.getKp();
+        double Ki = pidValues.getKi();
+        double Kd = pidValues.getKd();
+        double DT = pidValues.getDt();
         while(true) {
+            if(this.storageBoxPid.hasChanges()){
+                pidValues = this.storageBoxPid.getPidValues();
+                setpointX = pidValues.getSetpointX();
+                setpointY = pidValues.getSetpointY();
+                Kp = pidValues.getKp();
+                Ki = pidValues.getKi();
+                Kd = pidValues.getKd();
+                DT = pidValues.getDt();
+            }
+
             try {
                 //Wait conditionally for the correct state
                 this.eventBallStorageBox.await(Event.EventState.UP);

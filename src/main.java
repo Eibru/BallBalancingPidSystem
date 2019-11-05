@@ -13,21 +13,30 @@ public class main {
         SB_ballPos ballStorageBox = new SB_ballPos();
         SB_platformAngle platformAngleStorageBox = new SB_platformAngle();
         SB_servoPos servoStorageBox = new SB_servoPos();
+        SB_pidValues pidValuesStorageBox = new SB_pidValues();
 
         //Setup threads
         CamCom camCom = new CamCom(eventBallStorageBox, ballStorageBox);
-        PidController pidController = new PidController(eventBallStorageBox, ballStorageBox, eventPlatformAngleStorageBox, platformAngleStorageBox);
+        PidController pidController = new PidController(eventBallStorageBox, ballStorageBox, eventPlatformAngleStorageBox, platformAngleStorageBox, pidValuesStorageBox);
         InverseKinematics inverseKinematics = new InverseKinematics(eventPlatformAngleStorageBox, platformAngleStorageBox, eventServoStorageBox, servoStorageBox);
         ServoCom servoCom = new ServoCom(eventServoStorageBox, servoStorageBox);
+        JavaHttpServer httpServer = new JavaHttpServer(pidValuesStorageBox);
 
         //Set start angle
         platformAngleStorageBox.setAngle(0,0);
         eventPlatformAngleStorageBox.toggle();
+
+        //Set start pid values
+        pidValuesStorageBox.setPidValues(new PidValues(0.13,0.0,0.001,0.001, 0, 0));
+
+        //Set start setpoints
+        pidValuesStorageBox.setSetpoints(0,0);
 
         //Start threads
         camCom.start();
         pidController.start();
         inverseKinematics.start();
         servoCom.start();
+        httpServer.start();
     }
 }

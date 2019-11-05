@@ -1,0 +1,28 @@
+<html>
+<body>
+    <div>
+        Kp<input id="Kp" name="Kp" type="number" min="0" max="3" step="any" value="0.13"><br>
+        Ki<input id="Ki" name="Ki" type="number" min="0" max="1" step="any" value="0.0"><br>
+        Kd<input id="Kd" name="Kd" type="number" min="0" max="2" step="any" value="0.001"><br>
+        DT<input id="DT" name="DT" type="number" min="0" max="1" step="any" value="0.001"><br>
+        <button id="sendPidValues">Send</button>
+    </div>
+</body>
+<script type="text/javascript">
+    document.getElementById('sendPidValues').addEventListener('click', sendPidValues, false);
+
+    function sendPidValues(){
+        const http = new XMLHttpRequest();
+        const url = window.location.href;
+        http.open('POST',url);
+        http.send('PID:[Kp='+document.getElementById('Kp').value+','+'Ki='+document.getElementById('Ki').value+','+'Kd='+document.getElementById('Kd').value+','+'DT='+document.getElementById('DT').value+']');
+
+        http.onreadystatechange = function(){
+            if(this.readyState===4){
+                if(this.status !== 200){
+                    alert("Error, post request failed");
+                }
+            }
+        }
+    }
+</script>
