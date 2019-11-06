@@ -7,15 +7,20 @@ import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 
 public class JavaHttpServer extends Thread{
+    private SB_pidValues storageBoxPid;
+
     public JavaHttpServer(SB_pidValues storageBoxPid) {
-        System.out.println("Http server started");
+        this.storageBoxPid = storageBoxPid;
+    }
+
+    public void run() {
         try {
             HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
-            server.createContext("/test", new EventHandler(storageBoxPid));
+            server.createContext("/test", new EventHandler(this.storageBoxPid));
             server.setExecutor(null);
             server.start();
         } catch (Exception ex){
-           ex.printStackTrace();
+            ex.printStackTrace();
         }
     }
 
