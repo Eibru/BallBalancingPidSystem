@@ -23,7 +23,6 @@ public class PidController extends Thread {
     private double integralY = 0;
     private double derivativeY = 0;
     private double prevErrorY = 0;
-    private double DT = 0.001; //sek
 
     /**
      * Constructor
@@ -45,21 +44,9 @@ public class PidController extends Thread {
      */
     public void run() {
         PidValues pidValues = this.storageBoxPid.getPidValues();
-        double setpointX = pidValues.getSetpointX();
-        double setpointY = pidValues.getSetpointY();
-        double Kp = pidValues.getKp();
-        double Ki = pidValues.getKi();
-        double Kd = pidValues.getKd();
-        double DT = pidValues.getDt();
         while(true) {
             if(this.storageBoxPid.hasChanges()){
                 pidValues = this.storageBoxPid.getPidValues();
-                setpointX = pidValues.getSetpointX();
-                setpointY = pidValues.getSetpointY();
-                Kp = pidValues.getKp();
-                Ki = pidValues.getKi();
-                Kd = pidValues.getKd();
-                DT = pidValues.getDt();
             }
 
             try {
@@ -68,30 +55,30 @@ public class PidController extends Thread {
             }   catch (InterruptedException e) {}
             double ballPosX = storageBoxBall.getX();
             double ballPosY = storageBoxBall.getY();
-            double errorX = setpointX - ballPosX;
-            double errorY = setpointY - ballPosY;
+            double errorX = pidValues.getSetpointX() - ballPosX;
+            double errorY = pidValues.getSetpointY() - ballPosY;
 
             //Toggle event state
             this.eventBallStorageBox.toggle();
 
             if(errorX <-2 || errorX > 2){
-                integralX = integralX + errorX*DT;
+                integralX = integralX + errorX*pidValues.getDt();
             }else{
                 integralX = 0;
             }
 
-            derivativeX = (errorX - prevErrorX)/DT;
-            outputX = (Kp*errorX) + (Ki*integralX) + (Kd*derivativeX);
+            derivativeX = (errorX - prevErrorX)/pidValues.getDt();
+            outputX = (pidValues.getKp()*errorX) + (pidValues.getKi()*integralX) + (pidValues.getKd()*derivativeX);
             prevErrorX = errorX;
 
             if(errorY <-2 || errorY > 2){
-                integralY = integralY + errorY*DT;
+                integralY = integralY + errorY*pidValues.getDt();
             }else{
                 integralY = 0;
             }
 
-            derivativeY = (errorY - prevErrorY)/DT;
-            outputY = (Kp*errorY) + (Ki*integralY) + (Kd*derivativeY);
+            derivativeY = (errorY - prevErrorY)/pidValues.getDt();
+            outputY = (pidValues.getKp()*errorY) + (pidValues.getKi()*integralY) + (pidValues.getKd()*derivativeY);
             prevErrorY = errorY;
 
             //Makes sure the pitch and roll never exceeds +/- 30 degrees
@@ -107,7 +94,7 @@ public class PidController extends Thread {
             }
 
             try {
-                Thread.sleep(Math.round(DT*1000));
+                Thread.sleep(Math.round(pidValues.getDt()*1000));
             } catch (Exception ex){
                 System.out.println(ex.toString());
             }
