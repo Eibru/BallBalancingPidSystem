@@ -3,6 +3,7 @@ from CvThread import SB_frame
 from http import server
 from flask import Flask, render_template, Response, request
 import cv2
+import socket
 
 class WebServer(Thread):
     def __init__(self, sb_frame):
@@ -11,6 +12,12 @@ class WebServer(Thread):
 
     def run(self):
         app = Flask(__name__)
+
+        #UDP communication
+        UDP_IP = '127.0.0.1'
+        UDP_PORT = 5557
+        BUFFER_SIZE = 20
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
         @app.route('/')
         def index():
@@ -34,6 +41,7 @@ class WebServer(Thread):
             data = request.get_json()
             setpointX = data['setpointX']
             setpointY = data['setpointY']
+            s.sendto(("setpoint:"+str(setpointX) + "," + str(setpointY) + "\n").encode(), (UDP_IP,UDP_PORT))
             return 'OK', 200
 
         @app.route('/pidValues', methods = ['POST', 'GET'])
@@ -44,6 +52,7 @@ class WebServer(Thread):
                 Ki = data['Ki']
                 Kd = data['Kd']
                 DT = data['DT']
+                s.sendto(("pid:"+str(Kp) + "," + str(Ki) + "," + str(Kd) + "," + str(DT) + "\n").encode(), (UDP_IP,UDP_PORT))
                 return 'OK', 200
             else:
                 return render_template('pidValues.html')

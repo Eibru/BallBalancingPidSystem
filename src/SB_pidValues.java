@@ -3,7 +3,7 @@ public class SB_pidValues {
     private boolean changes;
 
     public SB_pidValues(){
-        this.pidValues = new PidValues(0,0,0,0,0,0);
+        this.pidValues = new PidValues(0,0,0,0/*,0,0*/);
         this.changes = true;
     }
 
@@ -17,11 +17,6 @@ public class SB_pidValues {
         this.pidValues.setKi(ki);
         this.pidValues.setKd(kd);
         this.pidValues.setDt(dt);
-        this.changes = true;
-    }
-
-    public void setSetpoints(double x, double y){
-        this.pidValues.setSetpoints(x,y);
         this.changes = true;
     }
 

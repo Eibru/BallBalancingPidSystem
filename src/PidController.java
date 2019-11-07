@@ -11,6 +11,7 @@ public class PidController extends Thread {
     private SB_ballPos storageBoxBall;
     private SB_platformAngle storageBoxAngle;
     private SB_pidValues storageBoxPid;
+    private SB_setpoint storageBoxSetpoint;
 
     //Outputs
     private double outputX = 0;
@@ -31,12 +32,13 @@ public class PidController extends Thread {
      * @param eventPlatformAngleStorageBox event for the platform storage box
      * @param storageBoxAngle storage box for the platform angle
      */
-    public PidController(Event eventBallStorageBox, SB_ballPos storageBoxBall, Event eventPlatformAngleStorageBox, SB_platformAngle storageBoxAngle, SB_pidValues storageBoxPid) {
+    public PidController(Event eventBallStorageBox, SB_ballPos storageBoxBall, Event eventPlatformAngleStorageBox, SB_platformAngle storageBoxAngle, SB_pidValues storageBoxPid, SB_setpoint storageBoxSetpoint) {
         this.storageBoxBall = storageBoxBall;
         this.storageBoxAngle = storageBoxAngle;
         this.eventBallStorageBox = eventBallStorageBox;
         this.eventPlatformAngleStorageBox = eventPlatformAngleStorageBox;
         this.storageBoxPid = storageBoxPid;
+        this.storageBoxSetpoint = storageBoxSetpoint;
     }
 
     /**
@@ -44,19 +46,21 @@ public class PidController extends Thread {
      */
     public void run() {
         PidValues pidValues = this.storageBoxPid.getPidValues();
+        Setpoint setpoint = this.storageBoxSetpoint.getSetpoint();
         while(true) {
             if(this.storageBoxPid.hasChanges()){
                 pidValues = this.storageBoxPid.getPidValues();
             }
-
+            if(this.storageBoxSetpoint.hasChanges())
+                setpoint = this.storageBoxSetpoint.getSetpoint();
             try {
                 //Wait conditionally for the correct state
                 this.eventBallStorageBox.await(Event.EventState.UP);
             }   catch (InterruptedException e) {}
             double ballPosX = storageBoxBall.getX();
             double ballPosY = storageBoxBall.getY();
-            double errorX = pidValues.getSetpointX() - ballPosX;
-            double errorY = pidValues.getSetpointY() - ballPosY;
+            double errorX = setpoint.getSetpointX() - ballPosX;
+            double errorY = setpoint.getSetpointY() - ballPosY;
 
             //Toggle event state
             this.eventBallStorageBox.toggle();

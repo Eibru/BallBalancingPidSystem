@@ -3,16 +3,12 @@ public class PidValues {
     private double ki;
     private double kd;
     private double dt;
-    private double setpointX;
-    private double setpointY;
 
-    public PidValues(double kp, double ki, double kd, double dt, double setpointX, double setpointY){
+    public PidValues(double kp, double ki, double kd, double dt){
         this.kp = kp;
         this.ki = ki;
         this.kd = kd;
         this.dt = dt;
-        this.setpointX = setpointX;
-        this.setpointY = setpointY;
     }
 
     public void setKp(double kp){
@@ -31,24 +27,11 @@ public class PidValues {
         this.dt = dt;
     }
 
-    public void setSetpointX(double s){
-        this.setpointX = s;
-    }
-
-    public void setSetpointY(double s){
-        this.setpointY = s;
-    }
-
     public void setValues(double kp, double ki, double kd, double dt){
         this.kp = kp;
         this.ki = ki;
         this.kd = kd;
         this.dt = dt;
-    }
-
-    public void setSetpoints(double x, double y){
-        this.setpointX = x;
-        this.setpointY = y;
     }
 
     public double getKp(){
@@ -67,11 +50,7 @@ public class PidValues {
         return this.dt;
     }
 
-    public double getSetpointX(){
-        return this.setpointX;
-    }
-
-    public double getSetpointY(){
-        return this.setpointY;
+    public String toString(){
+        return "Kp="+this.kp+"\nKi="+this.ki+"\nKd="+this.kd+"\nDT="+this.dt+"\n";
     }
 }

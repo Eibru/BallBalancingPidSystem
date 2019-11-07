@@ -65,7 +65,8 @@ public class JavaHttpServer extends Thread{
                         this.storageBoxPid.setSetpoints(setpointX,setpointY);
                     }
                 } else {
-                    File file = new File(".\\http\\index.html");
+                    //System.out.println(System.getProperty("user.dir"));
+                    File file = new File(System.getProperty("user.dir")+"/http/index.html");
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 
                     String line;
