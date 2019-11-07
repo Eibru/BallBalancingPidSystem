@@ -24,9 +24,9 @@ public class ServoCom extends Thread {
      */
     public void run(){
         //For testing cycle time
-        long endTime = 0;
+        /*long endTime = 0;
         long startTime = 0;
-        long cycleTime = 0;
+        long cycleTime = 0;*/
 
         try {
             DatagramSocket socket = new DatagramSocket();

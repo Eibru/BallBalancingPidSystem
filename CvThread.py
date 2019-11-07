@@ -110,7 +110,7 @@ class CvCom(Thread):
                         #Send position of the ball over UDP
                         s.sendto((str(dist_x) + "," + str(dist_y) + "\n").encode(), (UDP_IP,UDP_PORT))
 
-            self.sb_frame.setFrame(frame)
+            #self.sb_frame.setFrame(frame)
 
             #if showImage:
                 #Show image

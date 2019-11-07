@@ -1,6 +1,6 @@
 import socket
 import sys
-#from adafruit_servokit import ServoKit
+from adafruit_servokit import ServoKit
 import time
 from threading import Thread
 
@@ -9,7 +9,7 @@ class ServoCom(Thread):
         Thread.__init__(self)
 
     def run(self):
-        #kit = ServoKit(channels=16)
+        kit = ServoKit(channels=16)
 
         #UDP communication
         UDP_IP = '127.0.0.1'
@@ -32,6 +32,6 @@ class ServoCom(Thread):
                 angle2 = float(data[1])
                 angle3 = float(data[2])
 
-                #kit.servo[0].angle = angle1
-                #kit.servo[1].angle = angle2
-                #kit.servo[2].angle = angle3
+                kit.servo[0].angle = angle1
+                kit.servo[1].angle = angle2
+                kit.servo[2].angle = angle3

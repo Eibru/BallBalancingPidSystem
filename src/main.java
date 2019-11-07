@@ -28,7 +28,7 @@ public class main {
         eventPlatformAngleStorageBox.toggle();
 
         //Set default pid values
-        pidValuesStorageBox.setPidValues(new PidValues(0.13,0.0,0.001,0.001));
+        pidValuesStorageBox.setPidValues(new PidValues(0.13,0.0005,0.0022,0.001));
 
         //Set default setpoint
         setpointStorageBox.setSetpoint(new Setpoint(0,0));
