@@ -25,16 +25,14 @@ class WebServer(Thread):
 
         def gen(frames):
             while True:
-                #oriframe = frames.getFrame()
-                #scaledFrame = cv2.resize(oriframe,(300,300))
-
                 _,jpeg = cv2.imencode('.jpg',frames.getFrame())
                 frame = jpeg.tobytes()
-                yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
         @app.route('/video_feed')
         def video_feed():
-            return Response(gen(self.sb_frame),mimetype='multipart/x-mixed-replace; boundary=frame')
+            return Response(gen(self.sb_frame),mimetype='multipart/x-mixed-replace; boundary=vlframe')
 
         @app.route('/setpoint', methods = ['POST'])
         def setpoint():

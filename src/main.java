@@ -21,16 +21,16 @@ public class main {
         PidController pidController = new PidController(eventBallStorageBox, ballStorageBox, eventPlatformAngleStorageBox, platformAngleStorageBox, pidValuesStorageBox, setpointStorageBox);
         InverseKinematics inverseKinematics = new InverseKinematics(eventPlatformAngleStorageBox, platformAngleStorageBox, eventServoStorageBox, servoStorageBox);
         ServoCom servoCom = new ServoCom(eventServoStorageBox, servoStorageBox);
-        JavaHttpServer httpServer = new JavaHttpServer(pidValuesStorageBox);
+        WebCom webCom = new WebCom(setpointStorageBox, pidValuesStorageBox);
 
         //Set start angle
         platformAngleStorageBox.setAngle(0,0);
         eventPlatformAngleStorageBox.toggle();
 
-        //Set start pid values
+        //Set default pid values
         pidValuesStorageBox.setPidValues(new PidValues(0.13,0.0,0.001,0.001));
 
-        //Set start setpoints
+        //Set default setpoint
         setpointStorageBox.setSetpoint(new Setpoint(0,0));
 
         //Start threads
@@ -38,6 +38,6 @@ public class main {
         pidController.start();
         inverseKinematics.start();
         servoCom.start();
-        httpServer.start();
+        webCom.start();
     }
 }

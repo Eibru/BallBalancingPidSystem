@@ -5,7 +5,9 @@
   </head>
   <body>
     <h1>Stream</h1>
-    <img src="{{ url_for('video_feed') }}">
+    <div>
+      <img src="{{ url_for('video_feed') }}" height="400" width="400">
+    </div>
     <hr>
     <div class="slidecontainer">
       <input type="range" min="-150" max="150" value="0" class="slider" id="xRange">
