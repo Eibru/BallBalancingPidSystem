@@ -28,10 +28,10 @@ class ServoCom(Thread):
                 print(data[1])
                 print(data[2])
 
-                servo1 = float(data[0])
-                servo2 = float(data[1])
-                servo3 = float(data[2])
+                angle1 = float(data[0])
+                angle2 = float(data[1])
+                angle3 = float(data[2])
 
-                #kit.servo[0].angle = servo1
-                #kit.servo[1].angle = servo2
-                #kit.servo[2].angle = servo3
+                #kit.servo[0].angle = angle1
+                #kit.servo[1].angle = angle2
+                #kit.servo[2].angle = angle3

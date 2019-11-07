@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <title>Stream</title>
+    <link rel="stylesheet" href='../static/style.css'/>
+  </head>
+  <body>
+    <h1>Stream</h1>
+    <img src="{{ url_for('video_feed') }}">
+    <hr>
+    <div class="slidecontainer">
+      <input type="range" min="-150" max="150" value="0" class="slider" id="xRange">
+    </div>
+    <div class="slidecontainer">
+      <input type="range" min="-150" max="150" value="0" class="slider" id="yRange">
+    </div>
+    <p>Eilev</p>
+  </body>
+  <script>
+    let xRange = document.getElementById('xRange');
+    let yRange = document.getElementById('yRange');
+    let platformRadius = 140;
+    var prevX = 0; 
+    var prevY = 0; 
+
+    xRange.addEventListener('input',()=>{
+      var x = xRange.value; 
+      var y = yRange.value; 
+      var dist = Math.sqrt(x*x + y*y);
+      if(dist > platformRadius){
+        xRange.value = Math.sqrt(platformRadius*platformRadius - y*y);
+      }
+    }, false);
+
+    yRange.addEventListener('input',()=>{
+      var x = xRange.value; 
+      var y = yRange.value; 
+      var dist = Math.sqrt(x*x + y*y);
+      if(dist > platformRadius){
+        yRange.value = Math.sqrt(platformRadius*platformRadius - x*x);
+      }
+    }, false);
+
+    xRange.addEventListener('click',()=>{
+      sendSetpoints(xRange.value, yRange.value);
+    });
+
+    yRange.addEventListener('click',()=>{
+      sendSetpoints(xRange.value, yRange.value);
+    });
+
+    function sendSetpoints(x,y){
+      var http = new XMLHttpRequest();
+      var url = window.location.href + 'setpoint';
+      var data = JSON.stringify({
+        "setpointX": x, 
+        "setpointY": y
+      });
+
+      http.open('POST',url);
+      http.setRequestHeader('Content-type', 'application/json');
+
+      http.onreadystatechange = function(){
+        if(this.readyState===4){
+          if(this.status !== 200){
+              alert("Error, post request failed");
+          }
+        }
+      }
+
+      http.send(data);
+    }
+  </script>
+</html>
