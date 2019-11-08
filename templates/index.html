@@ -24,30 +24,38 @@
     <p>Eilev</p>
   </body>
   <script>
-    let platformRadius = 140;
+    'use strict';
+    let platformRadius = 150;
+    let allowedRadius = 130;
     let xRange = document.getElementById('xRange');
     let yRange = document.getElementById('yRange');
-    var prevX = 0; 
-    var prevY = 0; 
-    
-    var canvas = document.getElementById('canvas');
-    var ctx = canvas.getContext('2d');
-    var dot = new Dot(ctx);
-    var img = new Image;
+    let canvas = document.getElementById('canvas');
+    let ctx = canvas.getContext('2d');
+    let dot = new Dot(ctx);
+    let img = new Image;
 
+    img.src = window.location.href + 'video_feed';
+    img.onload = ()=>{
+      canvas.width = img.width*1.8;
+      canvas.height = img.height*1.8;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.onclick = canvasClick;
+      var t = setInterval(()=>{
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        dot.x = map(xRange.value, xRange.min, xRange.max, 0, canvas.width);
+        dot.y = map(yRange.value, yRange.min, yRange.max, 0, canvas.height);
+        dot.draw();
+        document.getElementById('setpoint').innerHTML = 'X: '+xRange.value + ', Y: '+yRange.value;
+      },50);
+    }
+
+    //Set min and max values of the ranges
     xRange.min = -platformRadius; 
     xRange.max = platformRadius; 
     yRange.min = -platformRadius; 
     yRange.max = platformRadius; 
 
-    var t=setInterval(()=>{
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      dot.x = map(xRange.value, xRange.min, xRange.max, 0, canvas.width);
-      dot.y = map(yRange.value, yRange.min, yRange.max, 0, canvas.height);
-      dot.draw();
-      document.getElementById('setpoint').innerHTML = 'X: '+xRange.value + ', Y: '+yRange.value;
-    },50);
-
+    //Dot object
     function Dot(ctx){
       var me = this;
       var size = 10;
@@ -65,14 +73,7 @@
       }
     }
 
-    img.src = window.location.href + 'video_feed'
-    img.onload = ()=>{
-      canvas.width = img.width*1.8;
-      canvas.height = img.height*1.8;
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      canvas.onclick = canvasClick;
-    }
-
+    //Canvas click event
     function canvasClick(e){
       var r = canvas.getBoundingClientRect(); 
       var x = e.clientX - r.left;
@@ -84,21 +85,13 @@
       xyRangeClickEvent();
     }
 
-    function checkValues(x,y){
-      var dist = Math.sqrt(x*x + y*y);
-      if(dist > platformRadius){
-        return Math.sqrt(platformRadius*platformRadius - y*y);
-      } else {
-        return null;
-      }
-    }
-
+    //xRange input event
     function xRangeInputEvent(){
       var x = xRange.value; 
       var y = yRange.value; 
       var dist = Math.sqrt(x*x + y*y);
-      if(dist > platformRadius){
-        var val = Math.sqrt(platformRadius*platformRadius - y*y);
+      if(dist > allowedRadius){
+        var val = Math.sqrt(allowedRadius*allowedRadius - y*y);
         if(x < 0){
           xRange.value = -val;
         } else {
@@ -107,12 +100,13 @@
       }
     }
 
+    //yRange input event
     function yRangeInputEvent(){
       var x = xRange.value; 
       var y = yRange.value; 
       var dist = Math.sqrt(x*x + y*y);
-      if(dist > platformRadius){
-        var val = Math.sqrt(platformRadius*platformRadius - x*x);
+      if(dist > allowedRadius){
+        var val = Math.sqrt(allowedRadius*allowedRadius - x*x);
         if(y < 0){
           yRange.value = -val;
         } else {
@@ -121,15 +115,18 @@
       }
     }
 
+    //Range click event
     function xyRangeClickEvent(){
       sendSetpoints(xRange.value, yRange.value);
     }
 
+    //Set event listeners
     xRange.addEventListener('input', xRangeInputEvent, false);
     yRange.addEventListener('input', yRangeInputEvent, false);
     xRange.addEventListener('click', xyRangeClickEvent);
     yRange.addEventListener('click', xyRangeClickEvent);
 
+    //Send setpoint to the webserver
     function sendSetpoints(x,y){
       var http = new XMLHttpRequest();
       var url = window.location.href + 'setpoint';
@@ -152,6 +149,7 @@
       http.send(data);
     }
 
+    //Map function
     function map(x, in_min, in_max, out_min, out_max) {
       return (Number(x)-Number(in_min))*((Number(out_max)-Number(out_min))/(Number(in_max)-Number(in_min)))+Number(out_min);
     }

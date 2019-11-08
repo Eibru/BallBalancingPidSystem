@@ -1,5 +1,9 @@
 import java.lang.Math;
 
+/**
+ * Thread that handles the inverse kinematics of the platform
+ * Reads the pitch and roll angles generated from the pid controller and generates the servo angles which would achieve the given pitch and roll
+ */
 public class InverseKinematics extends Thread {
     //Storage boxes
     private SB_platformAngle platformStorage;

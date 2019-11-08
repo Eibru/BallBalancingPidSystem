@@ -2,15 +2,27 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+/**
+ * Thread that gets the pid values and the setpoint from the python web server
+ */
 public class WebCom extends Thread{
     private SB_setpoint sb_setpoint;
     private SB_pidValues sb_pidValues;
 
+    /**
+     * Constructor
+     * @param sb_setpoint setpoint storagebox
+     * @param sb_pidValues pidvalues storagebox
+     */
     public WebCom(SB_setpoint sb_setpoint, SB_pidValues sb_pidValues){
         this.sb_setpoint = sb_setpoint;
         this.sb_pidValues = sb_pidValues;
     }
 
+    /**
+     * Communicates with the web server using UDP
+     * Reads pid values and setpoint and writes the values into the storageboxes
+     */
     public void run(){
         try{
             DatagramSocket socket = new DatagramSocket(5557);
