@@ -1,6 +1,7 @@
 .slidecontainer {
     width: 100%;
-  }
+    margin-top: 10px;
+ }
   
 .slider {
   -webkit-appearance: none;
@@ -32,6 +33,8 @@
   background: rgb(72, 138, 212);
   cursor: pointer;
 }
+
+.canvas-container { width: 100%; text-align:center; margin: auto; }
 
 #canvas {
   padding-left: 0;
