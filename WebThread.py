@@ -25,14 +25,16 @@ class WebServer(Thread):
 
         def gen(frames):
             while True:
-                _,jpeg = cv2.imencode('.jpg',frames.getFrame())
-                frame = jpeg.tobytes()
-                yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+                frame = frames.getFrame()
+                if frame is not None:
+                    _,jpeg = cv2.imencode('.jpg',frame)
+                    frame = jpeg.tobytes()
+                    yield (b'--frame\r\n'
+                        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
         @app.route('/video_feed')
         def video_feed():
-            return Response(gen(self.sb_frame),mimetype='multipart/x-mixed-replace; boundary=vlframe')
+            return Response(gen(self.sb_frame),mimetype='multipart/x-mixed-replace; boundary=frame')
 
         @app.route('/setpoint', methods = ['POST'])
         def setpoint():

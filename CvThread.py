@@ -2,6 +2,7 @@ import cv2
 import socket
 import math
 import numpy as np
+import time
 from threading import Thread
 
 class CvCom(Thread):
@@ -120,9 +121,15 @@ class CvCom(Thread):
 class SB_frame():
     def __init__(self):
         self.frame = 0
+        self.start = 0
+        self.end = 0
 
     def setFrame(self,frame):
         self.frame = frame
 
     def getFrame(self):
-        return self.frame
+        self.end = time.time()
+        if (self.end - self.start) > 0.05:
+            self.start = time.time()
+            return self.frame
+        return None
