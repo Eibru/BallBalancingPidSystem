@@ -1,9 +1,10 @@
-from multiprocessing import Process
+from multiprocessing import Process, Queue, Manager
 import cv2
 import socket
 import math
 import numpy as np
 from adafruit_servokit import ServoKit
+import time
 from flask import Flask, render_template, Response, request
 
 class SB_frame():
@@ -144,7 +145,15 @@ def cvCom(sb_frame):
 
                     #Send position of the ball over UDP
                     s.sendto((str(dist_x) + "," + str(dist_y) + "\n").encode(), (UDP_IP,UDP_PORT))
-        sb_frame.setFrame(frame)
+
+        _,jpeg = cv2.imencode('.jpg',frame.copy())
+        try:
+            sb_frame.put(jpeg.tobytes(), False)
+        except:
+            pass
+
+setpointX = 0
+setpointY = 0
 
 def webServer(sb_frame):
     app = Flask(__name__)
@@ -161,22 +170,27 @@ def webServer(sb_frame):
 
     def gen(frames):
         while True:
-            _,jpeg = cv2.imencode('.jpg',frames.getFrame())
-            frame = jpeg.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+            frame = frames.get()
+            if frame is not None:
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
     @app.route('/video_feed')
     def video_feed():
-        return Response(gen(sb_frame),mimetype='multipart/x-mixed-replace; boundary=vlframe')
+        return Response(gen(sb_frame),mimetype='multipart/x-mixed-replace; boundary=frame')
 
-    @app.route('/setpoint', methods = ['POST'])
+    @app.route('/setpoint', methods = ['POST', 'GET'])
     def setpoint():
-        data = request.get_json()
-        setpointX = data['setpointX']
-        setpointY = data['setpointY']
-        s.sendto(("setpoint:"+str(setpointX) + "," + str(setpointY) + "\n").encode(), (UDP_IP,UDP_PORT))
-        return 'OK', 200
+        global setpointX
+        global setpointY
+        if request.method == 'POST':
+            data = request.get_json()
+            setpointX = data['setpointX']
+            setpointY = data['setpointY']
+            s.sendto(("setpoint:"+str(setpointX) + "," + str(setpointY) + "\n").encode(), (UDP_IP,UDP_PORT))
+            return 'OK', 200
+        else:
+            return '{"setpointX": "'+str(setpointX)+'","setpointY": "'+str(setpointY)+'"}'
 
     @app.route('/pidValues', methods = ['POST', 'GET'])
     def pidValues():
@@ -192,13 +206,13 @@ def webServer(sb_frame):
             return render_template('pidValues.html')
 
     if __name__ == '__main__':
-        app.run(debug=False)
+        app.run(host='0.0.0.0',debug=False)
 
 if __name__ == '__main__':
-    frames = SB_frame()
-    p1 = Process(target=cvCom, args=(frames,))
+    q = Queue()
+    p1 = Process(target=cvCom, args=(q,))
     p2 = Process(target=servoCom)
-    p3 = Process(target=webServer, args=(frames,))
+    p3 = Process(target=webServer, args=(q,))
     p1.start()
     p2.start()
     p3.start()
