@@ -26,7 +26,7 @@ public class PidController extends Thread {
     private double prevErrorY = 0;
 
     // Filter constributons
-    private static final float ALPHA = 0.15f;
+    private static final double ALPHA = 0.2;
     private double prevOutputX;
     private double prevOutputY;
 
@@ -70,7 +70,7 @@ public class PidController extends Thread {
             //Toggle event state
             this.eventBallStorageBox.toggle();
 
-            if(errorX <-2 || errorX > 2){
+            if(errorX <-10 || errorX > 10){
                 integralX = integralX + errorX*pidValues.getDt();
             }else{
                 integralX = 0;
@@ -80,7 +80,7 @@ public class PidController extends Thread {
             outputX = (pidValues.getKp()*errorX) + (pidValues.getKi()*integralX) + (pidValues.getKd()*derivativeX);
             prevErrorX = errorX;
 
-            if(errorY <-2 || errorY > 2){
+            if(errorY <-10 || errorY > 10){
                 integralY = integralY + errorY*pidValues.getDt();
             }else{
                 integralY = 0;
@@ -113,8 +113,8 @@ public class PidController extends Thread {
                 this.eventPlatformAngleStorageBox.await(Event.EventState.DOWN);
             }   catch (InterruptedException e) {}
 
-            lowPass (outputX, prevOutputX);
-            lowPass(outputY, prevOutputY);
+            outputX = lowPass (outputX, prevOutputX);
+            outputY = lowPass(outputY, prevOutputY);
 
 
             //Set pitch and roll
@@ -130,7 +130,7 @@ public class PidController extends Thread {
     }
 
     private double lowPass (double input, double output) {
-        for ( int i=0; i<input; i++ ) {
+        for ( int i=0; i<10; i++ ) {
             output = output + ALPHA * (input - output);
         }
         return output;
