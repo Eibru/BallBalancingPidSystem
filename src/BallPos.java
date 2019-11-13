@@ -1,5 +1,5 @@
 /**
- * Class for storing x and y position
+ * Class for storing x and y position.
  */
 public class BallPos {
     private double xPos;

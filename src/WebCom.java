@@ -2,7 +2,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 /**
- * Thread that gets the pid values and the setpoint from the python web server
+ * Thread that gets the pid values and the setpoint from the python web server.
  */
 public class WebCom extends Thread{
     private SB_setpoint sb_setpoint;

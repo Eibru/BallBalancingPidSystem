@@ -1,5 +1,5 @@
 /**
- * Class that stores the three servo angles
+ * Class that stores the three servo angles.
  */
 public class ServoPos {
     private double angle1;

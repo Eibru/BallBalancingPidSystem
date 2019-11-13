@@ -1,5 +1,5 @@
 /**
- * Class that acts like a simple storagebox for storing pid values
+ * Class that acts like a simple storagebox for storing pid values.
  */
 public class SB_pidValues {
     private PidValues pidValues;

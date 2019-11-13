@@ -1,5 +1,5 @@
 /**
- * Class that acts like a simple storagebox for storing the setpoints
+ * Class that acts like a simple storagebox for storing the setpoints.
  */
 public class SB_setpoint {
     private Setpoint setpoint;
