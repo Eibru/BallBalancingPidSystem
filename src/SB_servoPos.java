@@ -1,5 +1,5 @@
 /**
- * Class that acts like a simple storagebox for storing the angles of the three servos
+ * Class that acts like a simple storagebox for storing the angles of the three servos.
  */
 public class SB_servoPos {
     private ServoPos servoPos;

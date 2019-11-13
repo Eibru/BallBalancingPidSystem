@@ -2,7 +2,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 /**
- * Gets the ballposition from the python CV program and puts it in a storagebox
+ * Gets the ballposition from the python CV program and puts it in a storagebox.
  */
 public class CamCom extends Thread {
     private SB_ballPos storageBox;

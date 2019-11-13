@@ -1,5 +1,5 @@
 /**
- * Event class
+ * Event class.
  */
 public class Event {
 

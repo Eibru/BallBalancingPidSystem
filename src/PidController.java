@@ -129,6 +129,12 @@ public class PidController extends Thread {
         }
     }
 
+    /**
+     *
+     * @param input
+     * @param output
+     * @return
+     */
     private double lowPass (double input, double output) {
         for ( int i=0; i<10; i++ ) {
             output = output + ALPHA * (input - output);

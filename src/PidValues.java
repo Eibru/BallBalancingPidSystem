@@ -1,5 +1,5 @@
 /**
- * Class that stores pid values
+ * Class that stores pid values.
  */
 public class PidValues {
     private double kp;

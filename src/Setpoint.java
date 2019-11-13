@@ -1,5 +1,5 @@
 /**
- * Class for storing x and y coordinates of a setpoint
+ * Class for storing x and y coordinates of a setpoint.
  */
 public class Setpoint {
     private double setpointX;

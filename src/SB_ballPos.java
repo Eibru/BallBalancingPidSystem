@@ -1,5 +1,5 @@
 /**
- * Class that acts like a simple storagebox for storing the position of the ball
+ * Class that acts like a simple storagebox for storing the position of the ball.
  */
 public class SB_ballPos {
     BallPos ballPos;

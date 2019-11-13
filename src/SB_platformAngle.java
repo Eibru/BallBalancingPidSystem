@@ -1,5 +1,5 @@
 /**
- * Class that acts like a simple storagebox for storing the angle of the platform
+ * Class that acts like a simple storagebox for storing the angle of the platform.
  */
 public class SB_platformAngle {
     private double pitch;
