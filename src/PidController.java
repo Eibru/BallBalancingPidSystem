@@ -25,6 +25,11 @@ public class PidController extends Thread {
     private double derivativeY = 0;
     private double prevErrorY = 0;
 
+    // Filter constributons
+    private static final float ALPHA = 0.15f;
+    private double prevOutputX;
+    private double prevOutputY;
+
     /**
      * Constructor
      * @param eventBallStorageBox event for the ball storage box
@@ -108,9 +113,14 @@ public class PidController extends Thread {
                 this.eventPlatformAngleStorageBox.await(Event.EventState.DOWN);
             }   catch (InterruptedException e) {}
 
+            lowPass (outputX, prevOutputX);
+            lowPass(outputY, prevOutputY);
+
+
             //Set pitch and roll
             this.storageBoxAngle.setAngle(outputX, -outputY);
-
+            prevOutputX = outputX;
+            prevOutputY = outputY;
             //Toggle event state
             this.eventPlatformAngleStorageBox.toggle();
 
@@ -118,4 +128,13 @@ public class PidController extends Thread {
             //System.out.println("--PidController--\n"+outputX+", "+outputY+"\n"+ballPosX+", "+ballPosY+"\n");
         }
     }
+
+    private double lowPass (double input, double output) {
+        for ( int i=0; i<input; i++ ) {
+            output = output + ALPHA * (input - output);
+        }
+        return output;
+    }
+
+
 }
