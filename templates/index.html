@@ -219,12 +219,12 @@
       }
 
       function doCircle(){
-        while(true){
+        setInterval(()=>{
           var setpoints = getCircleValues(80);
           xRange.value = setpoints[0];
           yRange.value = setpoints[1];
           sendSetpoints(xRange.value,yRange.value);
-        }
+        },100);
       }
 
       function getCircleValues(radius){
@@ -237,38 +237,30 @@
 
         if ((yPos <= radius && yPos>=0) && xPos >= 0) {
           //for (x = 1; x <= radius; x++) {
-            setTimeout(()=>{
               pos[0] = xPos + 1;
               pos[1] = - Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
-            },100);
             //break;
           //}
         }
         if ((xPos <= radius && xPos <= 0) && yPos <= 0) {
           //for (x = 1; x <= radius; x++) {
-            setTimeout(()=>{
               pos[0] = xPos - 1;
               pos[1] = - Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
-            },100);
             //break
           //}
         }
         if (xPos <= 0 && (yPos >= -radius && yPos <=0)) {
           //for (x = 1; x <= radius; x++) {
-            setTimeout(()=>{
               pos[0] = xPos - 1;
               pos[1] = Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
-            },100)
             //break
           //}
         }
 
         if ((xPos <= -radius && xPos <= 0) && yPos >= 0) {
           //for (x = 1; x <= radius; x++) {
-            setTimeout(()=>{
               pos[0] = xPos - 1;
               pos[1] = Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
-            },100);
             //break
           //}
         }
