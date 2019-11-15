@@ -36,7 +36,7 @@ public class WebCom extends Thread{
                     if (data.toLowerCase().contains("pid")) {
                         data = data.split(":")[1];
                         String[] s = data.split("\n")[0].split(",");
-                        PidValues pidValues = new PidValues(Double.parseDouble(s[0]), Double.parseDouble(s[1]), Double.parseDouble(s[2]), Double.parseDouble(s[3]));
+                        PidValues pidValues = new PidValues(Double.parseDouble(s[0]), Double.parseDouble(s[1]), Double.parseDouble(s[2]), Double.parseDouble(s[3]), Double.parseDouble(s[4]), Integer.parseInt(s[5]));
                         this.sb_pidValues.setPidValues(pidValues);
                     } else if (data.toLowerCase().contains("setpoint")) {
                         data = data.split(":")[1];

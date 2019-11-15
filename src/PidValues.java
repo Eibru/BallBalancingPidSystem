@@ -6,6 +6,8 @@ public class PidValues {
     private double ki;
     private double kd;
     private double dt;
+    private double filter_alpha;
+    private int filter_iterations;
 
     /**
      * Constructor
@@ -13,12 +15,16 @@ public class PidValues {
      * @param ki ki
      * @param kd kd
      * @param dt dt
+     * @param filter_alpha filter_alpha
+     * @param filter_iterations filter_iterations
      */
-    public PidValues(double kp, double ki, double kd, double dt){
+    public PidValues(double kp, double ki, double kd, double dt, double filter_alpha, int filter_iterations){
         this.kp = kp;
         this.ki = ki;
         this.kd = kd;
         this.dt = dt;
+        this.filter_alpha = filter_alpha;
+        this.filter_iterations = filter_iterations;
     }
 
     /**
@@ -54,17 +60,35 @@ public class PidValues {
     }
 
     /**
+     * Sets filter_alpha
+     * @param filter_alpha filter_alpha
+     */
+    public void setFilter_alpha(double filter_alpha){
+        this.filter_alpha = filter_alpha;
+    }
+
+    /**
+     * Sets filter_iterations
+     * @param filter_iterations filter_iterations
+     */
+    public void setFilter_iterations(int filter_iterations){
+        this.filter_iterations = filter_iterations;
+    }
+
+    /**
      * Sets pid values
      * @param kp kp
      * @param ki ki
      * @param kd kd
      * @param dt dt
      */
-    public void setValues(double kp, double ki, double kd, double dt){
+    public void setValues(double kp, double ki, double kd, double dt, double filter_alpha, int filter_iterations){
         this.kp = kp;
         this.ki = ki;
         this.kd = kd;
         this.dt = dt;
+        this.filter_alpha = filter_alpha;
+        this.filter_iterations = filter_iterations;
     }
 
     /**
@@ -100,10 +124,26 @@ public class PidValues {
     }
 
     /**
+     * Gets filter_alpha
+     * @return filter_alpha
+     */
+    public double getFilter_alpha(){
+        return this.filter_alpha;
+    }
+
+    /**
+     * Gets filter_iterations
+     * @return filter_iterations
+     */
+    public int getFilter_iterations(){
+        return this.filter_iterations;
+    }
+
+    /**
      * Gets a string representing the object
      * @return a string representing the object
      */
     public String toString(){
-        return "Kp="+this.kp+"\nKi="+this.ki+"\nKd="+this.kd+"\nDT="+this.dt+"\n";
+        return "Kp="+this.kp+"\nKi="+this.ki+"\nKd="+this.kd+"\nDT="+this.dt+"\nFilter alpha="+this.filter_alpha+"\nFilter iterations="+this.filter_iterations+"\n";
     }
 }

@@ -6,6 +6,7 @@ import numpy as np
 from adafruit_servokit import ServoKit
 import time
 from flask import Flask, render_template, Response, request
+import sys
 
 class SB_frame():
     def __init__(self):
@@ -70,14 +71,14 @@ def cvCom(sb_frame):
     upper2_v = 255
 
     #Define the portion of the image the program should look at
-    xMin = 172
-    xMax = 482
-    yMin = 92
-    yMax = 407
+    xMin = 185
+    xMax = 473
+    yMin = 90
+    yMax = 377
 
     #Define platform center and diameter
-    platformCenter = (157, 155)
-    platformRadius = 153
+    platformCenter = (145, 142)
+    platformRadius = 143
 
     #Start video capture
     vs = cv2.VideoCapture(0)
@@ -148,6 +149,7 @@ def cvCom(sb_frame):
 
         _,jpeg = cv2.imencode('.jpg',frame.copy())
         try:
+            #sb_frame.put(frame, False)
             sb_frame.put(jpeg.tobytes(), False)
         except:
             pass
@@ -172,6 +174,7 @@ def webServer(sb_frame):
         while True:
             frame = frames.get()
             if frame is not None:
+                #_,jpeg = cv2.imencode('.jpg',frame.copy())
                 yield (b'--frame\r\n'
                        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
@@ -200,7 +203,10 @@ def webServer(sb_frame):
             Ki = data['Ki']
             Kd = data['Kd']
             DT = data['DT']
-            s.sendto(("pid:"+str(Kp) + "," + str(Ki) + "," + str(Kd) + "," + str(DT) + "\n").encode(), (UDP_IP,UDP_PORT))
+            filter_alpha = data['filter_alpha']
+            filter_iterations = data['filter_iterations']
+
+            s.sendto(("pid:"+str(Kp) + "," + str(Ki) + "," + str(Kd) + "," + str(DT) + "," + str(filter_alpha) + "," + str(filter_iterations) + "\n").encode(), (UDP_IP,UDP_PORT))
             return 'OK', 200
         else:
             return render_template('pidValues.html')
@@ -216,3 +222,14 @@ if __name__ == '__main__':
     p1.start()
     p2.start()
     p3.start()
+    if len(sys.argv) > 1:
+        if sys.argv[1] == 'i':
+            while True:
+                cv2.imshow('image',q.get())
+                k = cv2.waitKey(20)
+                if k == 27:
+                    cv2.destroyAllWindows()
+                    p1.kill()
+                    p2.kill()
+                    p3.kill()
+                    break
