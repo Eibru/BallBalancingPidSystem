@@ -1,11 +1,13 @@
 <html>
     <body>
         <div>
-                Kp<input id="Kp" name="Kp" type="number" min="0" max="3" step="0.01" value="0.13"><br>
-                Ki<input id="Ki" name="Ki" type="number" min="0" max="1" step="0.0001" value="0.0005"><br>
-                Kd<input id="Kd" name="Kd" type="number" min="0" max="2" step="0.0001" value="0.0022"><br>
-                DT<input id="DT" name="DT" type="number" min="0" max="1" step="0.001" value="0.001"><br>
-                <button id="sendPidValues">Send</button>
+            Kp<input id="Kp" name="Kp" type="number" min="0" max="3" step="0.01" value="0.11"><br>
+            Ki<input id="Ki" name="Ki" type="number" min="0" max="1" step="0.0001" value="0.0001"><br>
+            Kd<input id="Kd" name="Kd" type="number" min="0" max="2" step="0.0001" value="0.002"><br>
+            DT<input id="DT" name="DT" type="number" min="0" max="1" step="0.001" value="0.001"><br>
+            Filter_alpha<input id="filter_alpha" name="filter_alpha" type="number" min="0" max="5" step="0.01" value="0.02"><br>
+            Filter_iterations<input id="filter_iterations" name="filter_iterations" type="number" min="0" max="50" step="1" value="20"><br>
+            <button id="sendPidValues">Send</button>
             </div>
     </body>
     <script type="text/javascript">
@@ -18,7 +20,9 @@
                 "Kp": document.getElementById('Kp').value, 
                 "Ki": document.getElementById('Ki').value, 
                 "Kd": document.getElementById('Kd').value, 
-                "DT": document.getElementById('DT').value
+                "DT": document.getElementById('DT').value,
+                "filter_alpha": document.getElementById('filter_alpha').value,
+                "filter_iterations": document.getElementById('filter_iterations').value
             });
 
             http.open('POST',url);

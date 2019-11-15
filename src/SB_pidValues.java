@@ -9,7 +9,7 @@ public class SB_pidValues {
      * Constructor
      */
     public SB_pidValues(){
-        this.pidValues = new PidValues(0,0,0,0/*,0,0*/);
+        this.pidValues = new PidValues(0,0,0,0, 0, 0);
         this.changes = true;
     }
 
@@ -28,12 +28,16 @@ public class SB_pidValues {
      * @param ki ki
      * @param kd kd
      * @param dt dt
+     * @param filter_alpha filter_alpha
+     * @param filter_iterations filter_iterations
      */
-    public void setPidValues(double kp, double ki, double kd, double dt){
+    public void setPidValues(double kp, double ki, double kd, double dt, double filter_alpha, int filter_iterations){
         this.pidValues.setKp(kp);
         this.pidValues.setKi(ki);
         this.pidValues.setKd(kd);
         this.pidValues.setDt(dt);
+        this.pidValues.setFilter_alpha(filter_alpha);
+        this.pidValues.setFilter_iterations(filter_iterations);
         this.changes = true;
     }
 

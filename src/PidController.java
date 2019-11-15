@@ -113,8 +113,8 @@ public class PidController extends Thread {
                 this.eventPlatformAngleStorageBox.await(Event.EventState.DOWN);
             }   catch (InterruptedException e) {}
 
-            outputX = lowPass (outputX, prevOutputX);
-            outputY = lowPass(outputY, prevOutputY);
+            outputX = lowPass (outputX, prevOutputX, pidValues.getFilter_alpha(), pidValues.getFilter_iterations());
+            outputY = lowPass(outputY, prevOutputY, pidValues.getFilter_alpha(), pidValues.getFilter_iterations());
 
 
             //Set pitch and roll
@@ -135,9 +135,9 @@ public class PidController extends Thread {
      * @param output
      * @return
      */
-    private double lowPass (double input, double output) {
-        for ( int i=0; i<10; i++ ) {
-            output = output + ALPHA * (input - output);
+    private double lowPass (double input, double output, double alpha, int iterations) {
+        for ( int i=0; i<iterations; i++ ) {
+            output = output + alpha * (input - output);
         }
         return output;
     }
