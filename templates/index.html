@@ -219,52 +219,52 @@
       }
 
       function doCircle(){
+        xRange.value = 0;
+        yRange.value = 80;
         setInterval(()=>{
-          if(cirlce){
-            xRange.value = 0;
-            yRange.value = 80;
+          //if(circle){
             var setpoints = getCircleValues(80);
             xRange.value = setpoints[0];
             yRange.value = setpoints[1];
             sendSetpoints(xRange.value,yRange.value);
-          }
+          //}
         },100);
       }
 
       function getCircleValues(radius){
-        var xPos = xRange.value;
-        var yPos = yRange.value;
+        var xPos = int(xRange.value);
+        var yPos = int(yRange.value);
         var x = 1;
         //yPos = radius;
         //xPos = 0;
         var pos = new Array(xPos, yPos);
 
-        if ((yPos <= radius && yPos>=0) && xPos >= 0) {
+        if ((yPos <= radius && yPos >= 0) && xPos >= 0 && xPos<radius) {
           //for (x = 1; x <= radius; x++) {
               pos[0] = xPos + 1;
-              pos[1] = - Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
+              pos[1] = Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
             //break;
           //}
         }
-        if ((xPos <= radius && xPos <= 0) && yPos <= 0) {
-          //for (x = 1; x <= radius; x++) {
-              pos[0] = xPos - 1;
-              pos[1] = - Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
-            //break
-          //}
-        }
-        if (xPos <= 0 && (yPos >= -radius && yPos <=0)) {
+        if ((xPos <= radius && xPos <= 0) && yPos <= 0 && xPos<radius) {
           //for (x = 1; x <= radius; x++) {
               pos[0] = xPos - 1;
               pos[1] = Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
+            //break
+          //}
+        }
+        if (xPos <= 0 && (yPos >= -radius && yPos <=0) && xPos<radius) {
+          //for (x = 1; x <= radius; x++) {
+              pos[0] = xPos - 1;
+              pos[1] = -Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
             //break
           //}
         }
 
-        if ((xPos <= -radius && xPos <= 0) && yPos >= 0) {
+        if ((xPos <= -radius && xPos <= 0) && yPos >= 0 && xPos<radius) {
           //for (x = 1; x <= radius; x++) {
               pos[0] = xPos - 1;
-              pos[1] = Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
+              pos[1] = -Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
             //break
           //}
         }
