@@ -220,19 +220,23 @@
 
       function doCircle(){
         setInterval(()=>{
-          var setpoints = getCircleValues(80);
-          xRange.value = setpoints[0];
-          yRange.value = setpoints[1];
-          sendSetpoints(xRange.value,yRange.value);
+          if(cirlce){
+            xRange.value = 0;
+            yRange.value = 80;
+            var setpoints = getCircleValues(80);
+            xRange.value = setpoints[0];
+            yRange.value = setpoints[1];
+            sendSetpoints(xRange.value,yRange.value);
+          }
         },100);
       }
 
       function getCircleValues(radius){
-        var xPos;
-        var yPos;
+        var xPos = xRange.value;
+        var yPos = yRange.value;
         var x = 1;
-        yPos = radius;
-        xPos = 0;
+        //yPos = radius;
+        //xPos = 0;
         var pos = new Array(xPos, yPos);
 
         if ((yPos <= radius && yPos>=0) && xPos >= 0) {
