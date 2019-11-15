@@ -32,7 +32,7 @@
             </div>
           </div>
         </div>
-        <div class="col-2" style="border-left: 1px solid black;"></div>
+        <div class="col-2" style="border-left: 1px solid black;"><button id="circle" onclick="circleClick"></button></div>
       </div>
     </div>
   </body>
@@ -41,6 +41,7 @@
     document.addEventListener('DOMContentLoaded', (event) => {
       var platformRadius = 143;
       var allowedRadius = 130;
+      var circle = false;
       var xRange = document.getElementById('xRange');
       var yRange = document.getElementById('yRange');
       var canvas = document.getElementById('canvas');
@@ -93,49 +94,64 @@
 
       //Canvas click event
       function canvasClick(e){
-        var r = canvas.getBoundingClientRect();
-        var x = e.clientX - r.left;
-        var y = e.clientY - r.top;
-        xRange.value = map(x, 0, canvas.width, xRange.min, xRange.max);
-        yRange.value = map(y, 0, canvas.height, yRange.min, xRange.max);
-        xRangeInputEvent();
-        yRangeInputEvent();
-        xyRangeClickEvent();
+        if(!circle){
+          var r = canvas.getBoundingClientRect();
+          var x = e.clientX - r.left;
+          var y = e.clientY - r.top;
+          xRange.value = map(x, 0, canvas.width, xRange.min, xRange.max);
+          yRange.value = map(y, 0, canvas.height, yRange.min, xRange.max);
+          xRangeInputEvent();
+          yRangeInputEvent();
+          xyRangeClickEvent();
+        }
+      }
+
+      function circleClick(){
+        circle = !circle;
+        if(circle){
+
+        }
       }
 
       //xRange input event
       function xRangeInputEvent(){
-        var x = xRange.value;
-        var y = yRange.value;
-        var dist = Math.sqrt(x*x + y*y);
-        if(dist > allowedRadius){
-          var val = Math.sqrt(allowedRadius*allowedRadius - y*y);
-          if(x < 0){
-            xRange.value = -val;
-          } else {
-            xRange.value = val;
+        if(!circle){
+          var x = xRange.value;
+          var y = yRange.value;
+          var dist = Math.sqrt(x*x + y*y);
+          if(dist > allowedRadius){
+            var val = Math.sqrt(allowedRadius*allowedRadius - y*y);
+            if(x < 0){
+              xRange.value = -val;
+            } else {
+              xRange.value = val;
+            }
           }
         }
       }
 
       //yRange input event
       function yRangeInputEvent(){
-        var x = xRange.value;
-        var y = yRange.value;
-        var dist = Math.sqrt(x*x + y*y);
-        if(dist > allowedRadius){
-          var val = Math.sqrt(allowedRadius*allowedRadius - x*x);
-          if(y < 0){
-            yRange.value = -val;
-          } else {
-            yRange.value = val;
+        if(!circle){
+          var x = xRange.value;
+          var y = yRange.value;
+          var dist = Math.sqrt(x*x + y*y);
+          if(dist > allowedRadius){
+            var val = Math.sqrt(allowedRadius*allowedRadius - x*x);
+            if(y < 0){
+              yRange.value = -val;
+            } else {
+              yRange.value = val;
+            }
           }
         }
       }
 
       //Range click event
       function xyRangeClickEvent(){
-        sendSetpoints(xRange.value, yRange.value);
+        if(!circle){
+          sendSetpoints(xRange.value, yRange.value);
+        }
       }
 
       //Set event listeners
@@ -200,6 +216,63 @@
       //Map function
       function map(x, in_min, in_max, out_min, out_max) {
         return (Number(x)-Number(in_min))*((Number(out_max)-Number(out_min))/(Number(in_max)-Number(in_min)))+Number(out_min);
+      }
+
+      function doCircle(){
+        while(true){
+          var setpoints = getCircleValues(80);
+          xRange.value = setpoints[0];
+          yRange.value = setpoints[1];
+          sendSetpoints(xRange.value,yRange.value);
+        }
+      }
+
+      function getCircleValues(radius){
+        var xPos;
+        var yPos;
+        var x = 1;
+        yPos = radius;
+        xPos = 0;
+        var pos = new Array(xPos, yPos);
+
+        if ((yPos <= radius && yPos>=0) && xPos >= 0) {
+          //for (x = 1; x <= radius; x++) {
+            setTimeout(()=>{
+              pos[0] = xPos + 1;
+              pos[1] = - Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
+            },100);
+            //break;
+          //}
+        }
+        if ((xPos <= radius && xPos <= 0) && yPos <= 0) {
+          //for (x = 1; x <= radius; x++) {
+            setTimeout(()=>{
+              pos[0] = xPos - 1;
+              pos[1] = - Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
+            },100);
+            //break
+          //}
+        }
+        if (xPos <= 0 && (yPos >= -radius && yPos <=0)) {
+          //for (x = 1; x <= radius; x++) {
+            setTimeout(()=>{
+              pos[0] = xPos - 1;
+              pos[1] = Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
+            },100)
+            //break
+          //}
+        }
+
+        if ((xPos <= -radius && xPos <= 0) && yPos >= 0) {
+          //for (x = 1; x <= radius; x++) {
+            setTimeout(()=>{
+              pos[0] = xPos - 1;
+              pos[1] = Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
+            },100);
+            //break
+          //}
+        }
+        return pos;
       }
     });
   </script>
