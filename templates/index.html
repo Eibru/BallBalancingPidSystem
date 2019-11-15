@@ -166,7 +166,7 @@
         var url = window.location.href + 'setpoint';
         var data = JSON.stringify({
           "setpointX": x,
-          "setpointY": y
+          "setpointY": -y
         });
 
         http.open('POST',url);
@@ -200,7 +200,7 @@
               console.log(http.responseText);
               var json = JSON.parse(http.responseText);
               xRange.value = json["setpointX"];
-              yRange.value = json["setpointY"];
+              yRange.value = -json["setpointY"];
               xRangeInputEvent();
               yRangeInputEvent();
               if(cb){

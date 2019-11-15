@@ -118,7 +118,7 @@ def cvCom(sb_frame):
         mask = cv2.dilate(mask, np.ones((5, 5), np.uint8))
 
         #Find contours
-        cnts,h = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        _,cnts,h = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
         if len(cnts) > 0:
             #Find the contour with the biggest area
