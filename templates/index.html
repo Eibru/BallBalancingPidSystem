@@ -231,44 +231,64 @@
         },100);
       }
 
-      function getCircleValues(radius){
-        var xPos = int(xRange.value);
-        var yPos = int(yRange.value);
-        var x = 1;
-        //yPos = radius;
-        //xPos = 0;
-        var pos = new Array(xPos, yPos);
+      function getCircleValues(r){
+        var x = Number(xRange.value);
+        var y = Number(yRange.value);
+        var a = 21;
 
-        if ((yPos <= radius && yPos >= 0) && xPos >= 0 && xPos<radius) {
-          //for (x = 1; x <= radius; x++) {
-              pos[0] = xPos + 1;
-              pos[1] = Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
-            //break;
-          //}
-        }
-        if ((xPos <= radius && xPos <= 0) && yPos <= 0 && xPos<radius) {
-          //for (x = 1; x <= radius; x++) {
-              pos[0] = xPos - 1;
-              pos[1] = Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
-            //break
-          //}
-        }
-        if (xPos <= 0 && (yPos >= -radius && yPos <=0) && xPos<radius) {
-          //for (x = 1; x <= radius; x++) {
-              pos[0] = xPos - 1;
-              pos[1] = -Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
-            //break
-          //}
-        }
+        var mx = Math.sqrt(r*r - y*y);
+        var my = Math.sqrt(r*r - x*x);
 
-        if ((xPos <= -radius && xPos <= 0) && yPos >= 0 && xPos<radius) {
-          //for (x = 1; x <= radius; x++) {
-              pos[0] = xPos - 1;
-              pos[1] = -Math.sqrt(radius*radius - pos[0]*pos[0]) + 0.5;
-            //break
-          //}
+        if((y > 0 && x > 0) || (y == r && x === 0)){
+            if(mx >= my){
+                y -= a;
+                x = Math.sqrt(r*r - y*y);
+            } else {
+                x += a; 
+                y = Math.sqrt(r*r - x*x);
+            }
+            if(x >= r){
+                x = r; 
+                y = 0; 
+            }
+        } else if((y < 0 && x > 0) || (y === 0 && x === r)){
+            if(mx >= my){
+                y -= a; 
+                x = Math.sqrt(r*r - y*y);
+            } else {
+                x -= a; 
+                y = -Math.sqrt(r*r - x*x);
+            }
+            if(y <= -r){
+                y = -r; 
+                x = 0;
+            }
+        } else if((y < 0 && x < 0) || (y === -r && x === 0)){
+            if(mx >= my){
+                y += a; 
+                x = -Math.sqrt(r*r - y*y);
+            } else {
+                x -= a; 
+                y = -Math.sqrt(r*r - x*x);
+            }
+            if(x <= -r){
+                x = -r;
+                y = 0;
+            }
+        } else if((y > 0 && x < 0) || (y === 0 && x === -r)){
+            if(mx >= my){
+                y += a; 
+                x = -Math.sqrt(r*r - y*y);
+            } else {
+                x += a; 
+                y = Math.sqrt(r*r - x*x);
+            }
+            if(y >= r){
+                y = r;
+                x = 0;
+            }
         }
-        return pos;
+        return new Array(x, y);;
       }
     });
   </script>
