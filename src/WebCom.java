@@ -33,12 +33,12 @@ public class WebCom extends Thread{
                 packet = new DatagramPacket(buf, buf.length, packet.getAddress(), packet.getPort());
                 String data = new String(packet.getData(), 0, packet.getLength());
                 try {
-                    if (data.toLowerCase().contains("pid")) {
+                    if (data.toLowerCase().contains("pid") && !this.sb_pidValues.hasChanges()) {
                         data = data.split(":")[1];
                         String[] s = data.split("\n")[0].split(",");
                         PidValues pidValues = new PidValues(Double.parseDouble(s[0]), Double.parseDouble(s[1]), Double.parseDouble(s[2]), Double.parseDouble(s[3]), Double.parseDouble(s[4]), Integer.parseInt(s[5]));
                         this.sb_pidValues.setPidValues(pidValues);
-                    } else if (data.toLowerCase().contains("setpoint")) {
+                    } else if (data.toLowerCase().contains("setpoint") && !this.sb_setpoint.hasChanges()) {
                         data = data.split(":")[1];
                         String[] s = data.split("\n")[0].split(",");
                         Setpoint setpoint = new Setpoint(Double.parseDouble(s[0]), Double.parseDouble(s[1]));
