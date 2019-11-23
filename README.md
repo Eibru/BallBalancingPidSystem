@@ -15,3 +15,12 @@ Contains the main python application and all the python threads/processes.
   * Sends html file to client on connect
   * Streams the content of the storagebox which contains the frames
   * Can receive POST requests from the client to change the setpoint and the PID varables
+
+## Templates 
+Contains the html files for the GUI
+
+## Static
+Contains the css files for the GUI
+
+## src
+Contains the java application
