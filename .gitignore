@@ -1,0 +1,9 @@
+/out/
+/lib/
+/index-files/
+/include/
+/bin/
+/.vscode/
+/.idea/
+.DS_Store
+/out/
