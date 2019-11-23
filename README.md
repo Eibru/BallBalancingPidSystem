@@ -24,3 +24,20 @@ Contains the css files for the GUI
 
 ## src
 Contains the java application
+
+# CvCom
+Gets the ball position from UDP communication. Puts the value into the ballpos storagebox.
+
+# WebCom 
+Gets pid values and setpoints from UDP communication. Puts the values into the pidvalues and setpoint storageboxes.
+
+# PIDController
+Reads the ball position, pid values and setpoints from the storageboxes. Uses the values to calculate the pitch and roll angles of the platform, puts the generated values into the platform storagebox.
+
+# InverseKinematics
+Reads the values from the platform storagebox and calculates the servo angles to achieve the given pitch and roll of the platform. Puts the calculated values into the servoPos storagebox.
+
+# ServoCom
+Sends the content of the servoPos storagebox over UDP
+
+
